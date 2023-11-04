@@ -7,10 +7,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainActivity extends AppCompatActivity {
 
     Button signInButton, signUpButton;
     EditText usernameEditText, passwordEditText;
+
+    // firebase
+
+    DatabaseReference dbReference;
+    FirebaseDatabase fbRoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +40,26 @@ public class MainActivity extends AppCompatActivity {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                // Validate input
-                if (validateInput(username, password)) {
-                    // Here you would have your sign-in logic
-                    signIn(username, password);
-                }
+                // firebase
+                fbRoot = FirebaseDatabase.getInstance();
+                dbReference = fbRoot.getReference("tempUser");
+
+                dbReference.setValue(username);
+
+                // redefine reference as pass
+                dbReference = fbRoot.getReference("tempPass");
+                dbReference.setValue(password);
+
+                // destroy when done i guess
+                fbRoot = null;
+                dbReference = null;
+
+
+//                // Validate input
+//                if (validateInput(username, password)) {
+//                    // Here you would have your sign-in logic
+//                    signIn(username, password);
+//                }
             }
         });
 
