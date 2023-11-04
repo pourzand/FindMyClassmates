@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Find My Classmates</string>
+    <string name="user_profile">Profile</string>
+    <string name="classes">Classes</string>
+    <string name="inbox">Inbox</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

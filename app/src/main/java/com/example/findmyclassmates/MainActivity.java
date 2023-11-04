@@ -1,79 +1,51 @@
 package com.example.findmyclassmates;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import android.view.MenuItem;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button signInButton, signUpButton;
-    EditText usernameEditText, passwordEditText;
+    // Define your BottomNavigationView
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize the buttons
-        signInButton = findViewById(R.id.signInButton);
-        signUpButton = findViewById(R.id.signUpButton);
+        // Initialize the BottomNavigationView
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // Initialize the EditTexts
-        usernameEditText = findViewById(R.id.usernameEditText);
-        passwordEditText = findViewById(R.id.passwordEditText);
+        // Set Home as default selection
+        bottomNavigationView.setSelectedItemId(R.id.navigation_user_profile);
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        // Set up the listener for BottomNavigationView
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                // Capture user input from EditTexts
-                String username = usernameEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selectedFragment = null;
 
-                // Validate input
-                if (validateInput(username, password)) {
-                    // Here you would have your sign-in logic
-                    signIn(username, password);
+                int id = item.getItemId();
+                if (id == R.id.navigation_user_profile) {
+                    selectedFragment = new UserProfileFragment();
+                } else if (id == R.id.navigation_classes) {
+                    selectedFragment = new ClassesFragment();
+                } else if (id == R.id.navigation_inbox) {
+                    selectedFragment = new InboxFragment();
                 }
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
+                return true;
             }
         });
 
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navigate to your sign-up activity or logic
-                signUp();
-            }
-        });
-    }
-
-    private boolean validateInput(String username, String password) {
-        // Here you would check for validity, e.g., non-empty fields
-        if (username.isEmpty()) {
-            usernameEditText.setError("Username cannot be empty");
-            return false;
-        }
-        if (password.isEmpty()) {
-            passwordEditText.setError("Password cannot be empty");
-            return false;
-        }
-        // Add other validation checks as necessary
-        return true;
-    }
-
-    private void signIn(String username, String password) {
-        // Replace this with your actual sign-in logic.
-        // Currently, just showing a Toast message.
-        Toast.makeText(MainActivity.this, "Signing in with Username: " + username, Toast.LENGTH_LONG).show();
-        // Intent to another activity could go here if sign in is successful
-    }
-
-    private void signUp() {
-        // Replace this with your actual sign-up navigation or logic.
-        // Currently, just showing a Toast message.
-        Toast.makeText(MainActivity.this, "Navigate to Sign Up", Toast.LENGTH_LONG).show();
-        // Intent to another activity could go here to handle sign up
+        // Manually displaying the first fragment - one time only
+        Fragment initialFragment = new UserProfileFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, initialFragment).commit();
     }
 }
