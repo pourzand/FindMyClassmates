@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="button_red">#990000</color> <!-- You can change the hex code to any shade of red you prefer -->
+    <!-- ... other color definitions ... -->
 </resources>

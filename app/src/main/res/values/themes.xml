@@ -1,10 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.FindMyClassmates" parent="Theme.Material3.DayNight">
-        <!-- ".NoActionBar" removed from parent attributes - Seena -->
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/button_red</item>
+        <item name="colorOnPrimary">@android:color/white</item>
     </style>
 
-    <style name="Theme.FindMyClassmates" parent="Base.Theme.FindMyClassmates" />
+    <style name="Theme.FindMyClassmates" parent="Base.Theme.FindMyClassmates">
+        <!-- Customize your theme here. -->
+    </style>
 </resources>
