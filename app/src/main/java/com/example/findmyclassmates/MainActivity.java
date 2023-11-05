@@ -42,17 +42,27 @@ public class MainActivity extends AppCompatActivity {
 
                 // firebase
                 fbRoot = FirebaseDatabase.getInstance();
-                dbReference = fbRoot.getReference("tempUser");
 
-                dbReference.setValue(username);
+                // need to do error checking to see what could go wrong if invalid username
+                dbReference = fbRoot.getReference(username);
+                // obtain password
+                String retrievedPass = dbReference.getKey();
 
-                // redefine reference as pass
-                dbReference = fbRoot.getReference("tempPass");
-                dbReference.setValue(password);
+                if(retrievedPass.equals(password)) {
+                    // continue with log in flow
 
-                // destroy when done i guess
-                fbRoot = null;
-                dbReference = null;
+
+                    // destroy when done i guess
+                    fbRoot = null;
+                    dbReference = null;
+
+                } else {
+                    // do not proceed, try again
+
+
+                }
+
+
 
 
 //                // Validate input
