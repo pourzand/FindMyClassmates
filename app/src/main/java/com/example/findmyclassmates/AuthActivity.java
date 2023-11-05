@@ -78,45 +78,45 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void signIn(String username, String password) {
-        // Replace this with your actual sign-in logic.
-        Log.println(Log.INFO,"Inside signIn", "usernameGiven: " + username + ", and passwordGiven: " + password);
-
-        // If input is valid:
+        // If input is valid(which at the moment means not null):
         if (validateInput(username, password)) {
-            boolean correctCredentials = false;
             fbRoot = FirebaseDatabase.getInstance();
-
-            // need to do error checking to see what could go wrong if invalid username
             dbReference = fbRoot.getReference(username);
-            // obtain user's password
-            Task<com.google.firebase.database.DataSnapshot> retrievedPassObject = dbReference.get();
-            String retrievedPass = retrievedPassObject.getResult().getValue().toString();
-            Log.println(Log.INFO,"Inside signIn", "retrievedPass: " + retrievedPass);
 
+            dbReference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DataSnapshot dataSnapshot = task.getResult();
+                    if (dataSnapshot.exists()) {
+                        String retrievedPass = dataSnapshot.getValue(String.class);
+                        Log.println(Log.INFO, "Inside signIn", "retrievedPass: " + retrievedPass);
 
-            if(retrievedPass.equals(password)) {
-                // continue with log in flow
-                Log.println(Log.INFO,"Inside signIn comparison", "we should be good");
+                        if (retrievedPass.equals(password)) {
+                            // Correct credentials, continue with login flow
+                            Log.println(Log.INFO, "Inside signIn comparison", "Login successful");
 
-                correctCredentials = true;
+                            Intent mainActivityIntent = new Intent(AuthActivity.this, MainActivity.class);
+                            startActivity(mainActivityIntent);
+                            finish();
+                        } else {
+                            // Incorrect password, indicate to the user
+                            Toast.makeText(AuthActivity.this, "Incorrect password", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // Username not found, indicate to the user
+                        Toast.makeText(AuthActivity.this, "Username not found", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    // Handle any errors that occurred during the database fetch
+                    Toast.makeText(AuthActivity.this, "An error occurred while fetching data", Toast.LENGTH_LONG).show();
+                }
 
-                // destroy when done i guess
+                // Always release resources when done
                 fbRoot = null;
                 dbReference = null;
-            } else {
-                // cannot proceed
-
-            }
-
-            if(correctCredentials) {
-                Intent mainActivityIntent = new Intent(AuthActivity.this, MainActivity.class);
-                startActivity(mainActivityIntent);
-                finish(); // Call this to finish the current Activity and remove it from the back stack.
-            } else {
-                //indicate to user somehow the password is incorrect for that user
-            }
+            });
         }
     }
+
 
     private void signUp() {
         // If sign-up is successful:
