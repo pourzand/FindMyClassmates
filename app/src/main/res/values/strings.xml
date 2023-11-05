@@ -3,6 +3,13 @@
     <string name="user_profile">Profile</string>
     <string name="classes">Classes</string>
     <string name="inbox">Inbox</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="choose_role">Choose Role</string> <!-- Added this line -->
+
+    <string-array name="roles">
+        <item>Undergrad Student</item>
+        <item>Graduate Student</item>
+        <item>Faculty</item>
+        <item>Staff</item>
+    </string-array>
 </resources>

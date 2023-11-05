@@ -1,27 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#FFFFFF">
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".UserProfileFragment">
 
-    <LinearLayout
-        android:id="@+id/container"
+    <TextView
+        android:id="@+id/userProfileHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Profile"
+        android:textSize="24sp"
+        android:layout_marginBottom="32dp"
+        android:padding="12dp" />
+
+    <EditText
+        android:id="@+id/nameEditText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Name"
+        android:padding="12dp"
+        android:layout_marginBottom="8dp" />
 
-        <TextView
-            android:id="@+id/userProfileHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User Profile"
-            android:textSize="24sp"
-            android:layout_marginBottom="32dp" />
+    <Spinner
+        android:id="@+id/roleSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:entries="@array/roles"
+        android:prompt="@string/choose_role"
+        android:padding="12dp"
+        android:layout_marginBottom="8dp" />
 
-        <!-- Add more UI elements here as needed -->
+    <EditText
+        android:id="@+id/uscIdEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="USC ID"
+        android:padding="12dp"
+        android:layout_marginBottom="8dp" />
 
-    </LinearLayout>
-</FrameLayout>
+    <ImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@android:drawable/ic_menu_camera"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="Profile Image" />
+
+    <Button
+        android:id="@+id/updateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Profile"
+        android:onClick="onButtonClick"
+        android:padding="12dp"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
