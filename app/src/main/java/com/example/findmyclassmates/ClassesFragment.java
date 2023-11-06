@@ -1,7 +1,6 @@
 package com.example.findmyclassmates;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,10 +28,8 @@ public class ClassesFragment extends Fragment {
         // Parse CSV data and populate classList
         parseCSVData();
 
-        RecyclerView recyclerView = view.findViewById(R.id.classesRecyclerView);
-        ClassAdapter adapter = new ClassAdapter(classList);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Display DepartmentSelectionFragment initially
+        openDepartmentSelectionFragment();
 
         return view;
     }
@@ -47,10 +43,6 @@ public class ClassesFragment extends Fragment {
             String[] nextLine;
             while ((nextLine = customReadNext(reader)) != null) {
                 if (nextLine.length >= 9) {
-                    for (String s : nextLine) {
-                        Log.d("ClassesFragment", s);
-                    }
-
                     String department = nextLine[0];
                     String className = nextLine[1];
                     String description = nextLine[2];
@@ -63,8 +55,6 @@ public class ClassesFragment extends Fragment {
 
                     ClassModel classModel = new ClassModel(department, className, description, units, time, days, instructor, location, classId);
                     classList.add(classModel);
-                } else {
-                    Log.e("ClassesFragment", "Invalid data format: " + nextLine);
                 }
             }
 
@@ -72,11 +62,7 @@ public class ClassesFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.d("ClassesFragment", "classList size: " + classList.size());
     }
-
-
-
 
     private String[] customReadNext(BufferedReader reader) {
         try {
@@ -88,5 +74,17 @@ public class ClassesFragment extends Fragment {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void openDepartmentSelectionFragment() {
+        DepartmentSelectionFragment departmentSelectionFragment = new DepartmentSelectionFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("classList", new ArrayList<>(classList));
+        departmentSelectionFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, departmentSelectionFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
