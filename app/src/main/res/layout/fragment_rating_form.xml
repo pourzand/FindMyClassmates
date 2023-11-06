@@ -11,4 +11,15 @@
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
 
+
+    <!-- Back Button at the top -->
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/back_arrow"
+        android:contentDescription="@string/back_button_description"
+        android:padding="8dp"
+        android:onClick="onBackClicked"/>
+
 </FrameLayout>

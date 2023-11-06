@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class RateClassFragment extends Fragment {
 
@@ -32,8 +33,18 @@ public class RateClassFragment extends Fragment {
             }
         });
 
+        ImageView backButton = view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Handle what happens when the back button is clicked
+                // Typically, we just pop the back stack
+                if (getFragmentManager() != null) {
+                    getFragmentManager().popBackStack();
+                }
+            }
+        });
+
         return view;
     }
-
-    // Rest of the code...
 }
