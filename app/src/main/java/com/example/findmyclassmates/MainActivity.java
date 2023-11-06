@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new UserProfileFragment();
                 } else if (id == R.id.navigation_classes) {
                     selectedFragment = new ClassesFragment();
+                } else if (id == R.id.navigation_find_classmates) {
+                    selectedFragment = new FindClassmatesFragment();
                 } else if (id == R.id.navigation_inbox) {
                     selectedFragment = new InboxFragment();
                 }

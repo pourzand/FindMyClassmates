@@ -44,14 +44,14 @@ public class ClassesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Handle the back button click
-        ImageView backButton = view.findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
+//        // Handle the back button click
+//        ImageView backButton = view.findViewById(R.id.backButton);
+//        backButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                requireActivity().getSupportFragmentManager().popBackStack();
+//            }
+//        });
 
         // Initialize RecyclerView for departments
         departmentRecyclerView = view.findViewById(R.id.departmentRecyclerView);

@@ -10,6 +10,11 @@
         android:title="@string/classes" />
 
     <item
+        android:id="@+id/navigation_find_classmates"
+        android:icon="@drawable/find_classmates"
+        android:title="Find Classmates" />
+
+    <item
         android:id="@+id/navigation_inbox"
         android:icon="@drawable/inbox"
         android:title="@string/inbox" />

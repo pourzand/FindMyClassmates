@@ -6,14 +6,22 @@
     android:gravity="center"
     android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/backButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/back_arrow"
-        android:contentDescription="@string/back_button_description"
-        android:padding="8dp"
-        android:onClick="onBackClicked"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"> <!-- This will left-align the back button -->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/backButton"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:src="@drawable/back_arrow"-->
+<!--            android:contentDescription="@string/back_button_description"-->
+<!--            android:padding="8dp"-->
+<!--            android:onClick="onBackClicked"/>-->
+
+    </LinearLayout>
 
     <!-- RecyclerView for departments -->
     <androidx.recyclerview.widget.RecyclerView
