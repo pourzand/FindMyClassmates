@@ -6,12 +6,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SignUpActivity extends AppCompatActivity {
 
     EditText usernameEditText, passwordEditText, repeatPasswordEditText;
     Button signUpButton;
+
+    // Firebase
+    DatabaseReference dbReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +32,10 @@ public class SignUpActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.usernameEditTextSignUp);
         passwordEditText = findViewById(R.id.passwordEditTextSignUp);
         repeatPasswordEditText = findViewById(R.id.repeatPasswordEditText);
-
         signUpButton = findViewById(R.id.signUpButtonSignUpPage);
+
+        // Initialize Firebase Database reference
+        dbReference = FirebaseDatabase.getInstance().getReference(); // Adjust the path as needed
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,9 +45,15 @@ public class SignUpActivity extends AppCompatActivity {
                 String repeatPassword = repeatPasswordEditText.getText().toString();
 
                 if (validateInput(username, password, repeatPassword)) {
-                    // Proceed with the sign-up process if the passwords match
-                    // Here you would handle the sign-up logic
-                    signUpNewUser(username, password);
+                    // Check if the username already exists in the database
+                    // Will be done in later iterations of this app
+
+                    // If username is not already used, create a key value pair of the username and password
+                    dbReference.child(username).setValue(password);
+
+                    Intent mainActivityIntent = new Intent(SignUpActivity.this, MainActivity.class);
+                    startActivity(mainActivityIntent);
+                    finish();
                 }
             }
         });
@@ -51,10 +70,5 @@ public class SignUpActivity extends AppCompatActivity {
         }
         return true;
     }
-
-    private void signUpNewUser(String username, String password) {
-        Intent mainActivityIntent = new Intent(SignUpActivity.this, MainActivity.class);
-        startActivity(mainActivityIntent);
-        finish(); // Call this to finish the current Activity and remove it from the back stack.
-    }
 }
+
