@@ -80,8 +80,9 @@ public class ClassDetailsFragment extends Fragment {
             }
         });
 
+        DatabaseReference currUserClassReference = fbRoot.getReference("profiles").child(currentUsername).child("classes");
 
-        // Handle click event for Enroll/Unenroll button
+
         // Handle click event for Enroll/Unenroll button
         buttonEnrollToggle.setOnClickListener(new View.OnClickListener() {
 
@@ -92,13 +93,15 @@ public class ClassDetailsFragment extends Fragment {
                     // User is currently enrolled, the clicked again meaning they want to unenroll
 
                     // Unenroll the user from the class
-                    dbReference.child(currentUsername).removeValue();
+                    dbReference.child(currentUsername).removeValue(); // Remove from class roster
+                    currUserClassReference.child(currentClassID).removeValue(); // Remove from user classes
 
                 } else {
                     // User is not enrolled, click to enroll
 
                     // Enroll the user in the class
-                    dbReference.child(currentUsername).setValue(true);
+                    dbReference.child(currentUsername).setValue(true); // add to class roster
+                    currUserClassReference.child(currentClassID).setValue(true); // add to user classes
 
                 }
                 // Toggle the enrollment state
