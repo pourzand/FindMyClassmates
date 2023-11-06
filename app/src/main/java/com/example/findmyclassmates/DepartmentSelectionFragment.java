@@ -24,6 +24,7 @@ public class DepartmentSelectionFragment extends Fragment {
     private Button nextButton;
 
     private List<ClassModel> classList;
+
     private String selectedDepartment;
 
     @Override
@@ -65,23 +66,23 @@ public class DepartmentSelectionFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pass selected department to the next step (ClassSelectionFragment)
-                openClassSelectionFragment();
+                // Pass selected department and classList to the next step (ClassesFragment)
+                openClassesFragment();
             }
         });
 
         return view;
     }
 
-    private void openClassSelectionFragment() {
-        ClassSelectionFragment classSelectionFragment = new ClassSelectionFragment();
+    private void openClassesFragment() {
+        ClassesFragment classesFragment = new ClassesFragment();
         Bundle bundle = new Bundle();
         bundle.putString("selectedDepartment", selectedDepartment);
         bundle.putParcelableArrayList("classList", new ArrayList<>(classList));
-        classSelectionFragment.setArguments(bundle);
+        classesFragment.setArguments(bundle);
 
         getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, classSelectionFragment)
+                .replace(R.id.fragment_container, classesFragment)
                 .addToBackStack(null)
                 .commit();
     }

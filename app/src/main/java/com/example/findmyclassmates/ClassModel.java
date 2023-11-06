@@ -7,14 +7,14 @@ public class ClassModel implements Parcelable {
     private String department;
     private String className;
     private String description;
-    private int units;
+    private String units;
     private String time;
     private String days;
     private String instructor;
     private String location;
     private String classID;
 
-    public ClassModel(String department, String className, String description, int units, String time, String days, String instructor, String location, String classID) {
+    public ClassModel(String department, String className, String description, String units, String time, String days, String instructor, String location, String classID) {
         this.department = department;
         this.className = className;
         this.description = description;
@@ -39,8 +39,8 @@ public class ClassModel implements Parcelable {
         return description;
     }
 
-    public int getUnits() {
-        return units;
+    public String getUnits() {
+        return getUnits();
     }
 
     public String getTime() {
@@ -68,7 +68,7 @@ public class ClassModel implements Parcelable {
         department = in.readString();
         className = in.readString();
         description = in.readString();
-        units = in.readInt();
+        units = in.readString();
         time = in.readString();
         days = in.readString();
         instructor = in.readString();
@@ -98,7 +98,7 @@ public class ClassModel implements Parcelable {
         dest.writeString(department);
         dest.writeString(className);
         dest.writeString(description);
-        dest.writeInt(units);
+        dest.writeString(units);
         dest.writeString(time);
         dest.writeString(days);
         dest.writeString(instructor);
