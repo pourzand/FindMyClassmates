@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,15 +35,46 @@ public class ClassDetailsFragment extends Fragment {
         TextView textViewUnits = view.findViewById(R.id.textViewUnits);
         TextView textViewProfessor = view.findViewById(R.id.textViewProfessor);
         TextView textViewDescription = view.findViewById(R.id.textViewDescription);
-        // ... add other TextViews for each piece of class information you want to display
+        Button buttonEnrollToggle = view.findViewById(R.id.buttonEnrollToggle);
 
         // Set the TextViews to display the class details
-        textViewClassID.setText(selectedClass.getClassID());
+        textViewClassID.setText(selectedClass.getClassID() + " -"); // Added dash for separation
         textViewClassName.setText(selectedClass.getClassName());
-        textViewUnits.setText(selectedClass.getUnits());
-        textViewProfessor.setText(selectedClass.getProfessor());
-        textViewDescription.setText(selectedClass.getDescription());
-        // ... set other TextViews with data from the selectedClass
+        textViewUnits.setText("Units: " + selectedClass.getUnits());
+        textViewProfessor.setText("Professor: " + selectedClass.getProfessor());
+        textViewDescription.setText("Description: " + selectedClass.getDescription());
+
+        // Initially, we assume the user is not enrolled
+        buttonEnrollToggle.setText("Enroll");
+
+        // Handle click event for Enroll/Unenroll button
+        buttonEnrollToggle.setOnClickListener(new View.OnClickListener() {
+            boolean isEnrolled = false; // Initial state
+
+            @Override
+            public void onClick(View v) {
+                // Toggle the enrollment state
+                isEnrolled = !isEnrolled;
+
+                // Update the button text based on the state
+                buttonEnrollToggle.setText(isEnrolled ? "Unenroll" : "Enroll");
+
+                // You can also change the button appearance here if needed
+                buttonEnrollToggle.setBackgroundColor(getResources().getColor(isEnrolled ? android.R.color.holo_red_dark : android.R.color.holo_green_light, null));
+            }
+        });
+
+        ImageView backButton = view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Handle what happens when the back button is clicked
+                // Typically, we just pop the back stack
+                if (getFragmentManager() != null) {
+                    getFragmentManager().popBackStack();
+                }
+            }
+        });
 
         return view;
     }

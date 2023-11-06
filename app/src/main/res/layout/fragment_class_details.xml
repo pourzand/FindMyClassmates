@@ -4,38 +4,69 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textViewClassID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Class ID" />
+    <!-- Back Button at the top -->
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/back_arrow"
+        android:contentDescription="@string/back_button_description"
+        android:padding="8dp"
+        android:onClick="onBackClicked"/>
 
-    <TextView
-        android:id="@+id/textViewClassName"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Class Name" />
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/textViewClassID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/textViewClassName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewUnits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Units" />
+        android:textSize="16sp"
+        android:text="Units: "
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/textViewProfessor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Professor" />
+        android:textSize="16sp"
+        android:text="Professor: "
+        android:layout_marginBottom="8dp" />
 
+    <!-- TextView for Description with "Description:" prefix -->
     <TextView
         android:id="@+id/textViewDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Professor" />
+        android:textSize="16sp"
+        android:text="Description: "
+        android:layout_marginBottom="8dp" />
 
-    <!-- Add other TextViews for the rest of the class details -->
-
-    <!-- ... -->
+    <Button
+        android:id="@+id/buttonEnrollToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="Enroll"
+        android:layout_marginTop="20dp" />
 
 </LinearLayout>

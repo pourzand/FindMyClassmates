@@ -6,6 +6,15 @@
     android:gravity="center"
     android:padding="16dp">
 
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/back_arrow"
+        android:contentDescription="@string/back_button_description"
+        android:padding="8dp"
+        android:onClick="onBackClicked"/>
+
     <!-- RecyclerView for departments -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/departmentRecyclerView"

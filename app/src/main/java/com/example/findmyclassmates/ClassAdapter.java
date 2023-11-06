@@ -2,12 +2,14 @@ package com.example.findmyclassmates;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
@@ -54,11 +56,23 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         public void bind(final ClassModel classModel, Context context) {
             nameTextView.setText(classModel.getClassName());
             itemView.setOnClickListener(view -> {
-                Intent intent = new Intent(context, ClassDetailActivity.class);
-                // Explicitly casting to Parcelable to resolve the ambiguity
-                intent.putExtra("classModel", (Parcelable) classModel);
-                context.startActivity(intent);
+                // Check if the context is an instance of FragmentActivity to safely cast it
+                if (context instanceof FragmentActivity) {
+                    FragmentActivity activity = (FragmentActivity) context;
+
+                    ClassDetailsFragment classDetailsFragment = new ClassDetailsFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable("selectedClass", classModel);
+                    classDetailsFragment.setArguments(args);
+
+                    // Replace the current fragment with the detail fragment
+                    activity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, classDetailsFragment) // Use the actual container ID here
+                            .addToBackStack(null)  // Add transaction to the back stack if you want to navigate back
+                            .commit();
+                }
             });
         }
+
     }
 }
