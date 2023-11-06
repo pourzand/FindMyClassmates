@@ -4,13 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
-// com.example.findmyclassmates.ClassAdapter.java
+// Assuming ClassModel is a model class you have in your project that contains the class details.
 public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHolder> {
     private List<ClassModel> classList;
 
@@ -36,16 +34,26 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         return classList.size();
     }
 
+    // Call this method when you need to update the list of classes in the adapter.
+    public void updateClassList(List<ClassModel> newClassList) {
+        this.classList = newClassList;
+        notifyDataSetChanged();
+    }
+
+    // Static inner ViewHolder class.
     public static class ClassViewHolder extends RecyclerView.ViewHolder {
         private TextView classNameTextView;
+        // You may also want to add other TextViews or views for additional class details.
 
         public ClassViewHolder(@NonNull View itemView) {
             super(itemView);
             classNameTextView = itemView.findViewById(R.id.classNameTextView);
+            // Initialize other views here.
         }
 
         public void bind(ClassModel classModel) {
             classNameTextView.setText(classModel.getClassName());
+            // Bind other class details to their respective views here.
         }
     }
 }

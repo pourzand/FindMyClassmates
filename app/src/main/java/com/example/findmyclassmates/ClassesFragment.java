@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,53 +15,61 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ClassesFragment extends Fragment {
 
     private List<ClassModel> classList = new ArrayList<>();
-    private RecyclerView recyclerView;
+    private Set<String> departmentSet = new HashSet<>();
+    private RecyclerView departmentRecyclerView;
+    private RecyclerView classesRecyclerView;
+    private DepartmentAdapter departmentAdapter;
+    private ClassAdapter classAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_classes, container, false);
-        return view;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_classes, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = view.findViewById(R.id.classesRecyclerView);
+        // Set up RecyclerView for departments
+        departmentRecyclerView = view.findViewById(R.id.departmentRecyclerView); // Replace with your actual ID
+        departmentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        departmentAdapter = new DepartmentAdapter(new ArrayList<>(), this::onDepartmentSelected);
+        departmentRecyclerView.setAdapter(departmentAdapter);
 
-        // Initialize RecyclerView
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
+        // Set up RecyclerView for classes, initially invisible or gone
+        classesRecyclerView = view.findViewById(R.id.classesRecyclerView);
+        classesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        classAdapter = new ClassAdapter(new ArrayList<>());
+        classesRecyclerView.setAdapter(classAdapter);
 
-        // Parse CSV data and populate classList
-        parseCSVData();
-
-        DepartmentSelectionFragment departmentSelectionFragment = new DepartmentSelectionFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("classList", new ArrayList<>(classList));
-        departmentSelectionFragment.setArguments(bundle);
-
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, departmentSelectionFragment)
-                .commit();
+        // Parse CSV data and fill departments
+        new Thread(this::parseCSVData).start();
     }
 
-    public void filterClassesByDepartment(String department) {
+    private void onDepartmentSelected(String department) {
+        // Filter classes by selected department
+        filterClassesByDepartment(department);
+        // Show the classes RecyclerView and hide the departments RecyclerView
+        departmentRecyclerView.setVisibility(View.GONE);
+        classesRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void filterClassesByDepartment(String department) {
         List<ClassModel> filteredList = new ArrayList<>();
         for (ClassModel classModel : classList) {
             if (classModel.getDepartment().equals(department)) {
                 filteredList.add(classModel);
             }
         }
-
-        // Update RecyclerView with the filtered list
-        ClassAdapter adapter = new ClassAdapter(filteredList);
-        recyclerView.setAdapter(adapter);
+        classAdapter.updateClassList(filteredList);
     }
 
     private void parseCSVData() {
@@ -71,39 +78,43 @@ public class ClassesFragment extends Fragment {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader reader = new BufferedReader(inputStreamReader);
 
-            String[] nextLine;
-            while ((nextLine = customReadNext(reader)) != null) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] nextLine = line.split(",");
                 if (nextLine.length >= 9) {
-                    String department = nextLine[0];
-                    String className = nextLine[1];
-                    String description = nextLine[2];
-                    String units = nextLine[3];
-                    String time = nextLine[4];
-                    String days = nextLine[5];
-                    String instructor = nextLine[6];
-                    String location = nextLine[7];
-                    String classId = nextLine[8];
-
-                    ClassModel classModel = new ClassModel(department, className, description, units, time, days, instructor, location, classId);
+                    ClassModel classModel = new ClassModel(
+                            nextLine[0],
+                            nextLine[1],
+                            nextLine[2],
+                            nextLine[3],
+                            nextLine[4],
+                            nextLine[5],
+                            nextLine[6],
+                            nextLine[7],
+                            nextLine[8]
+                    );
                     classList.add(classModel);
+                    departmentSet.add(nextLine[0]); // Assuming the first entry is the department
                 }
             }
 
             reader.close();
+
+            // Update the RecyclerViews on the main thread
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    departmentAdapter.updateDepartmentList(new ArrayList<>(departmentSet));
+                    // Initially, we display only the departments
+                    departmentRecyclerView.setVisibility(View.VISIBLE);
+                    classesRecyclerView.setVisibility(View.GONE);
+                });
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private String[] customReadNext(BufferedReader reader) {
-        try {
-            String line = reader.readLine();
-            if (line != null) {
-                return line.split(",");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    // The rest of your ClassesFragment code remains unchanged.
+    // You would need to create a new DepartmentAdapter similar to ClassAdapter to display the departments.
+    // And in your layout, you should have two RecyclerViews: one for departments and one for classes.
 }
