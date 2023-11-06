@@ -22,11 +22,14 @@ public class ClassSelectionFragment extends Fragment {
     private String selectedDepartment;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_class_selection, container, false);
 
         // Get the selected department from arguments
-        selectedDepartment = getArguments().getString("selectedDepartment");
+        Bundle args = getArguments();
+        if (args != null) {
+            selectedDepartment = args.getString("selectedDepartment");
+        }
 
         // Assuming you have a ListView in your layout with the id listViewClassSelection
         ListView listView = view.findViewById(R.id.listViewClassSelection);
@@ -40,7 +43,18 @@ public class ClassSelectionFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ClassModel selectedClass = filteredClassList.get(position);
-                // Handle the selected class (e.g., open a new activity)
+
+                // Create a new Fragment instance
+                ClassDetailsFragment classDetailsFragment = new ClassDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("selectedClass", selectedClass); // Make sure your ClassModel is Parcelable
+                classDetailsFragment.setArguments(bundle);
+
+                // Replace the current fragment with the detail fragment
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(((ViewGroup)getView().getParent()).getId(), classDetailsFragment)
+                        .addToBackStack(null) // Add transaction to the back stack if you want to navigate back
+                        .commit();
             }
         });
 
@@ -53,6 +67,9 @@ public class ClassSelectionFragment extends Fragment {
             if (classModel.getDepartment().equals(selectedDepartment)) {
                 filteredClassList.add(classModel);
             }
+        }
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
         }
     }
 }

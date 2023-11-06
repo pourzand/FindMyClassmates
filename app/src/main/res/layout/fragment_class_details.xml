@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewClassID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Class ID" />
+
+    <TextView
+        android:id="@+id/textViewClassName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Class Name" />
+
+    <TextView
+        android:id="@+id/textViewUnits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Units" />
+
+    <TextView
+        android:id="@+id/textViewProfessor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Professor" />
+
+    <TextView
+        android:id="@+id/textViewDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Professor" />
+
+    <!-- Add other TextViews for the rest of the class details -->
+
+    <!-- ... -->
+
+</LinearLayout>

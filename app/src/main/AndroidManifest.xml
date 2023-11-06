@@ -24,15 +24,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
-        <!-- Declaration of ClassDetailActivity -->
-        <activity android:name=".ClassDetailActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity">
-            <!-- Enable back navigation from ClassDetailActivity to MainActivity -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
-        </activity>
         <!-- Other activities and components -->
     </application>
 

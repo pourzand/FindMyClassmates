@@ -60,6 +60,5 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
                 context.startActivity(intent);
             });
         }
-
     }
 }
