@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,18 +21,48 @@ import java.util.List;
 public class ClassesFragment extends Fragment {
 
     private List<ClassModel> classList = new ArrayList<>();
+    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_classes, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = view.findViewById(R.id.classesRecyclerView);
+
+        // Initialize RecyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
 
         // Parse CSV data and populate classList
         parseCSVData();
 
-        // Display DepartmentSelectionFragment initially
-        openDepartmentSelectionFragment();
+        DepartmentSelectionFragment departmentSelectionFragment = new DepartmentSelectionFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("classList", new ArrayList<>(classList));
+        departmentSelectionFragment.setArguments(bundle);
 
-        return view;
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, departmentSelectionFragment)
+                .commit();
+    }
+
+    public void filterClassesByDepartment(String department) {
+        List<ClassModel> filteredList = new ArrayList<>();
+        for (ClassModel classModel : classList) {
+            if (classModel.getDepartment().equals(department)) {
+                filteredList.add(classModel);
+            }
+        }
+
+        // Update RecyclerView with the filtered list
+        ClassAdapter adapter = new ClassAdapter(filteredList);
+        recyclerView.setAdapter(adapter);
     }
 
     private void parseCSVData() {
@@ -74,17 +105,5 @@ public class ClassesFragment extends Fragment {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private void openDepartmentSelectionFragment() {
-        DepartmentSelectionFragment departmentSelectionFragment = new DepartmentSelectionFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("classList", new ArrayList<>(classList));
-        departmentSelectionFragment.setArguments(bundle);
-
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, departmentSelectionFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 }

@@ -16,6 +16,12 @@
         android:textSize="24sp"
         android:layout_marginBottom="32dp" />
 
+    <!-- Add a RecyclerView for displaying classes -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/classesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <!-- Add a FrameLayout container for fragment display -->
     <FrameLayout
         android:id="@+id/fragment_container"

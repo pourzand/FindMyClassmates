@@ -40,8 +40,9 @@ public class ClassModel implements Parcelable {
     }
 
     public String getUnits() {
-        return getUnits();
+        return units; // Corrected the return statement
     }
+
 
     public String getTime() {
         return time;

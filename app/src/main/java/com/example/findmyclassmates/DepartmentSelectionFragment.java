@@ -1,6 +1,7 @@
 package com.example.findmyclassmates;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,7 @@ public class DepartmentSelectionFragment extends Fragment {
     private Button nextButton;
 
     private List<ClassModel> classList;
-
-    private String selectedDepartment;
+    private ClassesFragment classesFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,7 +35,21 @@ public class DepartmentSelectionFragment extends Fragment {
         nextButton = view.findViewById(R.id.nextButton);
 
         // Retrieve the classList from previous fragment
-        classList = getArguments().getParcelableArrayList("classList");
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            classList = bundle.getParcelableArrayList("classList");
+        } else {
+            Log.e("DepartmentSelectionFrag", "Bundle is null");
+        }
+
+        if (classList != null) {
+            Log.d("DepartmentSelectionFrag", "classList size: " + classList.size());
+        } else {
+            Log.e("DepartmentSelectionFrag", "classList is null");
+        }
+
+        // Initialize classesFragment
+        classesFragment = new ClassesFragment();
 
         // Extract unique departments from classList
         Set<String> uniqueDepartments = new HashSet<>();
@@ -54,7 +68,8 @@ public class DepartmentSelectionFragment extends Fragment {
         departmentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedDepartment = departmentList.get(position);
+                String selectedDepartment = departmentList.get(position);
+                classesFragment.filterClassesByDepartment(selectedDepartment);
             }
 
             @Override
@@ -75,9 +90,7 @@ public class DepartmentSelectionFragment extends Fragment {
     }
 
     private void openClassesFragment() {
-        ClassesFragment classesFragment = new ClassesFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("selectedDepartment", selectedDepartment);
         bundle.putParcelableArrayList("classList", new ArrayList<>(classList));
         classesFragment.setArguments(bundle);
 

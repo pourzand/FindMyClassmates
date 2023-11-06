@@ -4,4 +4,5 @@
     <item name="nextButton" type="id" />
     <item name="departmentSpinner" type="id" />
     <item name="departmentHeader" type="id" />
+    <item name="classesRecyclerView" type="id" />
 </resources>
