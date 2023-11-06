@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 
@@ -31,10 +39,18 @@ public class UserProfileFragment extends Fragment {
     Button updateButton;
     ImageView profileImageView;
 
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
+
+        String currentUsername = UserSession.getInstance().getUsername(); //get username
+        // Initialize DatabaseReference
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("profiles").child(currentUsername);
+
 
         nameEditText = view.findViewById(R.id.nameEditText);
         roleSpinner = view.findViewById(R.id.roleSpinner);
@@ -51,10 +67,13 @@ public class UserProfileFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roleSpinner.setAdapter(adapter);
 
+        Log.println(Log.ASSERT, "test","currUser  is " + currentUsername);
+
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String newName = nameEditText.getText().toString();
+
                 String newRole = roleSpinner.getSelectedItem().toString();
                 String newUscId = uscIdEditText.getText().toString();
 
@@ -67,6 +86,29 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showImagePickerDialog();
+            }
+        });
+
+        // Attach a ValueEventListener to retrieve user data
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Retrieve user data from the database
+                    String name = dataSnapshot.child("name").getValue(String.class);
+                    String role = dataSnapshot.child("role").getValue(String.class);
+                    String uscId = dataSnapshot.child("ID").getValue(String.class);
+
+                    // Update the UI with the retrieved data
+                    nameEditText.setText(name);
+                    roleSpinner.setSelection(getIndexFromRoleSpinner(role));
+                    uscIdEditText.setText(uscId);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors here
             }
         });
 
@@ -120,8 +162,32 @@ public class UserProfileFragment extends Fragment {
             }
         }
     }
+    private int getIndexFromRoleSpinner(String roleToFind) {
+        int index = 0; // Default index if role is not found
+
+        ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) roleSpinner.getAdapter();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (adapter.getItem(i).toString().equals(roleToFind)) {
+                index = i;
+                break; // Exit the loop when the role is found
+            }
+        }
+
+        return index;
+    }
+
 
     private void updateUser(String newName, String newRole, String newUscId) {
         // Implement this function to update user data in your data source
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("profiles").child(UserSession.getInstance().getUsername());
+
+        userRef.child("name").setValue(newName);
+        userRef.child("role").setValue(newRole);
+        userRef.child("uscId").setValue(newUscId);
+
+        Toast.makeText(requireContext(), "User profile updated successfully", Toast.LENGTH_SHORT).show();
+
+
+
     }
 }
