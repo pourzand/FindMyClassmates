@@ -9,6 +9,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,17 +74,21 @@ public class ClassesFragment extends Fragment {
 
     private void parseCSVData() {
         new Thread(() -> {
+            InputStream inputStream = null;
+            CSVReader csvReader = null;
             try {
-                InputStream inputStream = getResources().getAssets().open("Course CSV - Sheet1.csv");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                inputStream = getResources().getAssets().open("Course CSV - Sheet1.csv");
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                csvReader = new CSVReaderBuilder(inputStreamReader)
+                        .withSkipLines(1) // Skip the first line which is the header
+                        .build();
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] nextLine = line.split(",");
-                    if (nextLine.length >= 9) {
+                String[] nextLine;
+                while ((nextLine = csvReader.readNext()) != null) {
+                    if (nextLine.length >= 9) { // Assumes you have at least 9 columns of data
                         ClassModel classModel = new ClassModel(
-                                nextLine[0],
-                                nextLine[1],
+                                nextLine[0], // Department
+                                nextLine[1], // etc.
                                 nextLine[2],
                                 nextLine[3],
                                 nextLine[4],
@@ -89,12 +98,12 @@ public class ClassesFragment extends Fragment {
                                 nextLine[8]
                         );
                         classList.add(classModel);
-                        departmentSet.add(nextLine[0]);
+                        departmentSet.add(nextLine[0]); // Assuming the department is in the first column
                     }
                 }
-                reader.close();
 
-                if (getActivity() != null) {
+                // This code will run on the UI thread
+                if (isAdded()) { // Check if fragment is currently added to its activity
                     getActivity().runOnUiThread(() -> {
                         departmentAdapter.updateDepartmentList(new ArrayList<>(departmentSet));
                         departmentRecyclerView.setVisibility(View.VISIBLE);
@@ -103,9 +112,23 @@ public class ClassesFragment extends Fragment {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (CsvValidationException e) {
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    if (csvReader != null) {
+                        csvReader.close();
+                    }
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }
+
 
     // Rest of your code for adapters and any additional functions...
 }
