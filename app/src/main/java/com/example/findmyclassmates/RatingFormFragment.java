@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -51,29 +52,33 @@ public class RatingFormFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validateForm()) {
-                    String response1 = prompt1EditText.getText().toString();
-                    String response2 = prompt2EditText.getText().toString();
-                    String response3 = prompt3EditText.getText().toString();
-                    String response4 = prompt4EditText.getText().toString();
-                    String response5 = prompt5EditText.getText().toString();
-                    String rating = sixthRatingSpinner.getSelectedItem().toString();
+                Log.d("beg", "hi darline "); // Add this
+                if (mListener != null) {
+                    if (validateForm()) {
+                        String response1 = prompt1EditText.getText().toString();
+                        String response2 = prompt2EditText.getText().toString();
+                        String response3 = prompt3EditText.getText().toString();
+                        String response4 = prompt4EditText.getText().toString();
+                        String response5 = prompt5EditText.getText().toString();
+                        String rating = sixthRatingSpinner.getSelectedItem().toString();
 
-                    String concatenatedResponses =
-                            "1. The workload of the class: " + response1 + "\n" +
-                                    "2. The score they would like to give to this class: " + response2 + "\n" +
-                                    "3. If the professor checks attendance: " + response3 + "\n" +
-                                    "4. If the professor allows late homework submission: " + response4 + "\n" +
-                                    "5. Other comments: " + response5 + "\n" +
-                                    "6. Rating: " + rating;
+                        String concatenatedResponses =
+                                "1. The workload of the class: " + response1 + "\n" +
+                                        "2. The score they would like to give to this class: " + response2 + "\n" +
+                                        "3. If the professor checks attendance: " + response3 + "\n" +
+                                        "4. If the professor allows late homework submission: " + response4 + "\n" +
+                                        "5. Other comments: " + response5 + "\n" +
+                                        "6. Rating: " + rating;
+                        Log.d("ConcatenatedResponses", concatenatedResponses); // Add this log statement
 
-                    mListener.onRatingFormSubmit(concatenatedResponses);
+                        mListener.onRatingFormSubmit(concatenatedResponses);
 
-                    if (getFragmentManager() != null) {
-                        getFragmentManager().popBackStack();
+                        if (getFragmentManager() != null) {
+                            getFragmentManager().popBackStack();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Please fill out all prompts", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(getContext(), "Please fill out all prompts", Toast.LENGTH_SHORT).show();
                 }
             }
         });
