@@ -1,5 +1,8 @@
 package com.example.findmyclassmates;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-// Assuming ClassModel is a model class you have in your project that contains the class details.
 public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHolder> {
-    private List<ClassModel> classList;
 
-    public ClassAdapter(List<ClassModel> classList) {
+    private List<ClassModel> classList;
+    private Context context;
+
+    public ClassAdapter(Context context, List<ClassModel> classList) {
+        this.context = context;
         this.classList = classList;
     }
 
@@ -25,8 +30,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ClassViewHolder holder, int position) {
-        ClassModel classModel = classList.get(position);
-        holder.bind(classModel);
+        holder.bind(classList.get(position), context);
     }
 
     @Override
@@ -34,26 +38,28 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
         return classList.size();
     }
 
-    // Call this method when you need to update the list of classes in the adapter.
     public void updateClassList(List<ClassModel> newClassList) {
-        this.classList = newClassList;
+        classList = newClassList;
         notifyDataSetChanged();
     }
 
-    // Static inner ViewHolder class.
-    public static class ClassViewHolder extends RecyclerView.ViewHolder {
-        private TextView classNameTextView;
-        // You may also want to add other TextViews or views for additional class details.
+    static class ClassViewHolder extends RecyclerView.ViewHolder {
+        private final TextView nameTextView;
 
         public ClassViewHolder(@NonNull View itemView) {
             super(itemView);
-            classNameTextView = itemView.findViewById(R.id.classNameTextView);
-            // Initialize other views here.
+            nameTextView = itemView.findViewById(R.id.classNameTextView);
         }
 
-        public void bind(ClassModel classModel) {
-            classNameTextView.setText(classModel.getClassName());
-            // Bind other class details to their respective views here.
+        public void bind(final ClassModel classModel, Context context) {
+            nameTextView.setText(classModel.getClassName());
+            itemView.setOnClickListener(view -> {
+                Intent intent = new Intent(context, ClassDetailActivity.class);
+                // Explicitly casting to Parcelable to resolve the ambiguity
+                intent.putExtra("classModel", (Parcelable) classModel);
+                context.startActivity(intent);
+            });
         }
+
     }
 }

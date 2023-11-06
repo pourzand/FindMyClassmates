@@ -7,4 +7,6 @@
     <item name="classesRecyclerView" type="id" />
     <item name="departmentTextView" type="id" />
     <item name="departmentRecyclerView" type="id" />
+    <item name="classUnitsTextView" type="id" />
+    <item name="detailTextView" type="id" />
 </resources>

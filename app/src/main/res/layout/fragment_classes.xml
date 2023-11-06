@@ -6,27 +6,18 @@
     android:gravity="center"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/classesHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Classes"
-        android:textSize="24sp"
-        android:layout_marginBottom="32dp" />
-
-    <!-- RecyclerView for displaying departments -->
+    <!-- RecyclerView for departments -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/departmentRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" /> <!-- Initially hidden as per your functionality -->
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-    <!-- RecyclerView for displaying classes, initially hidden or gone -->
+    <!-- RecyclerView for displaying classes -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/classesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone" /> <!-- Initially hidden as per your functionality -->
+        android:layout_weight="1" />
 
 </LinearLayout>

@@ -3,78 +3,45 @@ package com.example.findmyclassmates;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ClassModel implements Parcelable {
+import java.io.Serializable;
+
+public class ClassModel implements Serializable, Parcelable {
     private String department;
+    private String courseNumber;
+    private String section;
     private String className;
-    private String description;
-    private String units;
-    private String time;
+    private String professor;
     private String days;
-    private String instructor;
+    private String time;
     private String location;
-    private String classID;
+    private String units;
 
-    public ClassModel(String department, String className, String description, String units, String time, String days, String instructor, String location, String classID) {
+    public ClassModel(String department, String courseNumber, String section,
+                      String className, String professor, String days,
+                      String time, String location, String units) {
         this.department = department;
+        this.courseNumber = courseNumber;
+        this.section = section;
         this.className = className;
-        this.description = description;
-        this.units = units;
-        this.time = time;
+        this.professor = professor;
         this.days = days;
-        this.instructor = instructor;
+        this.time = time;
         this.location = location;
-        this.classID = classID;
-    }
-
-    // Getters
-    public String getDepartment() {
-        return department;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getUnits() {
-        return units; // Corrected the return statement
-    }
-
-
-    public String getTime() {
-        return time;
-    }
-
-    public String getDays() {
-        return days;
-    }
-
-    public String getInstructor() {
-        return instructor;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public String getClassID() {
-        return classID;
+        this.units = units;
     }
 
     // Parcelable implementation
+
     protected ClassModel(Parcel in) {
         department = in.readString();
+        courseNumber = in.readString();
+        section = in.readString();
         className = in.readString();
-        description = in.readString();
-        units = in.readString();
-        time = in.readString();
+        professor = in.readString();
         days = in.readString();
-        instructor = in.readString();
+        time = in.readString();
         location = in.readString();
-        classID = in.readString();
+        units = in.readString();
     }
 
     public static final Creator<ClassModel> CREATOR = new Creator<ClassModel>() {
@@ -90,20 +57,36 @@ public class ClassModel implements Parcelable {
     };
 
     @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(department);
+        dest.writeString(courseNumber);
+        dest.writeString(section);
+        dest.writeString(className);
+        dest.writeString(professor);
+        dest.writeString(days);
+        dest.writeString(time);
+        dest.writeString(location);
+        dest.writeString(units);
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(department);
-        dest.writeString(className);
-        dest.writeString(description);
-        dest.writeString(units);
-        dest.writeString(time);
-        dest.writeString(days);
-        dest.writeString(instructor);
-        dest.writeString(location);
-        dest.writeString(classID);
-    }
+    // Getter methods
+    public String getDepartment() { return department; }
+    public String getCourseNumber() { return courseNumber; }
+    public String getSection() { return section; }
+    public String getClassName() { return className; }
+    public String getProfessor() { return professor; }
+    public String getDays() { return days; }
+    public String getTime() { return time; }
+    public String getLocation() { return location; }
+    public String getUnits() { return units; }
+
+    // Setter methods (if needed)
+    // Example:
+    // public void setClassName(String className) { this.className = className; }
+    // ... Add other setter methods if necessary
 }
