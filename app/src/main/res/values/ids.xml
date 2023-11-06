@@ -9,4 +9,13 @@
     <item name="departmentRecyclerView" type="id" />
     <item name="classUnitsTextView" type="id" />
     <item name="detailTextView" type="id" />
+    <item name="buttonAddRating" type="id" />
+    <item name="sixthRatingSpinner" type="id" />
+    <item name="submitButton" type="id" />
+    <item name="prompt4EditText" type="id" />
+    <item name="prompt1EditText" type="id" />
+    <item name="prompt2EditText" type="id" />
+    <item name="prompt3EditText" type="id" />
+    <item name="prompt5EditText" type="id" />
+    <item name="responseTextView" type="id" />
 </resources>

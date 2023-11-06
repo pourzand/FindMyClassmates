@@ -1,10 +1,37 @@
 <!-- fragment_rate_class.xml -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Back Button at the top -->
+    <!-- Class Name at the top -->
+    <TextView
+        android:id="@+id/classNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Class Name"
+        android:textSize="24sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Response TextView to display responses -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/responseTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:padding="8dp"
+            android:background="@android:color/darker_gray" />
+    </ScrollView>
+
+    <!-- Back Button at the bottom -->
     <ImageView
         android:id="@+id/backButton"
         android:layout_width="50dp"
@@ -12,6 +39,7 @@
         android:src="@drawable/back_arrow"
         android:contentDescription="@string/back_button_description"
         android:padding="8dp"
+        android:layout_gravity="center_horizontal"
         android:onClick="onBackClicked"/>
 
     <!-- Button to navigate to RatingFormFragment -->
@@ -20,6 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Rating"
-        android:layout_gravity="center" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp" />
 
-</FrameLayout>
+</LinearLayout>
