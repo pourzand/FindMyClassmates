@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="listViewClassSelection" type="id" />
+    <item name="nextButton" type="id" />
+    <item name="departmentSpinner" type="id" />
+    <item name="departmentHeader" type="id" />
+</resources>
