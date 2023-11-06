@@ -76,6 +76,29 @@ public class ClassDetailsFragment extends Fragment {
             }
         });
 
+        Button buttonRateClass = view.findViewById(R.id.buttonRateClass);
+        buttonRateClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create a new instance of RateClassFragment
+                RateClassFragment rateClassFragment = new RateClassFragment();
+
+                // If you need to pass data to the RateClassFragment, you can set arguments like this:
+                Bundle args = new Bundle();
+                args.putParcelable("selectedClass", selectedClass); // Assuming RateClassFragment needs details of the selected class
+                rateClassFragment.setArguments(args);
+
+                // Replace the current fragment with the RateClassFragment
+                if (getFragmentManager() != null) {
+                    getFragmentManager()
+                            .beginTransaction()
+                            .replace(((ViewGroup)getView().getParent()).getId(), rateClassFragment)
+                            .addToBackStack(null) // This adds the transaction to the back stack, enabling navigation back
+                            .commit();
+                }
+            }
+        });
+
         return view;
     }
 }
