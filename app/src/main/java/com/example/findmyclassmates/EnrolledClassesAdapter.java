@@ -6,15 +6,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 public class EnrolledClassesAdapter extends RecyclerView.Adapter<EnrolledClassesAdapter.ClassViewHolder> {
 
-    private List<String> enrolledClasses;
+    private List<ClassData> enrolledClasses;
 
-    public EnrolledClassesAdapter(List<String> enrolledClasses) {
+    public EnrolledClassesAdapter(List<ClassData> enrolledClasses) {
         this.enrolledClasses = enrolledClasses;
     }
 
@@ -27,8 +28,13 @@ public class EnrolledClassesAdapter extends RecyclerView.Adapter<EnrolledClasses
 
     @Override
     public void onBindViewHolder(@NonNull ClassViewHolder holder, int position) {
-        String className = enrolledClasses.get(position);
-        holder.classTextView.setText(className);
+        ClassData classData = enrolledClasses.get(position);
+        holder.classTextView.setText(classData.getClassName());
+
+        // Create an adapter for the students RecyclerView
+        StudentsAdapter studentsAdapter = new StudentsAdapter(classData.getStudents());
+        holder.studentsRecyclerView.setAdapter(studentsAdapter);
+        holder.studentsRecyclerView.setLayoutManager(new LinearLayoutManager(holder.studentsRecyclerView.getContext()));
     }
 
     @Override
@@ -38,11 +44,12 @@ public class EnrolledClassesAdapter extends RecyclerView.Adapter<EnrolledClasses
 
     public static class ClassViewHolder extends RecyclerView.ViewHolder {
         public TextView classTextView;
+        public RecyclerView studentsRecyclerView;
 
         public ClassViewHolder(View itemView) {
             super(itemView);
             classTextView = itemView.findViewById(R.id.classTextView);
+            studentsRecyclerView = itemView.findViewById(R.id.studentsRecyclerView);
         }
     }
 }
-

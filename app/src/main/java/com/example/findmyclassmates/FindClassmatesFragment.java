@@ -32,7 +32,7 @@ public class FindClassmatesFragment extends Fragment {
         recyclerView = view.findViewById(R.id.classListRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Fetch the list of enrolled classes from Firebase
+        // Fetch the list of enrolled classes and their students from Firebase
         String currentUsername = UserSession.getInstance().getUsername();
         DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("profiles")
                 .child(currentUsername)
@@ -41,14 +41,32 @@ public class FindClassmatesFragment extends Fragment {
         dbReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> enrolledClasses = new ArrayList<>();
+                List<ClassData> enrolledClasses = new ArrayList<>();
                 for (DataSnapshot classSnapshot : dataSnapshot.getChildren()) {
                     String className = classSnapshot.getKey();
-                    enrolledClasses.add(className);
-                }
+                    DatabaseReference rosterReference = FirebaseDatabase.getInstance().getReference("classes")
+                            .child(className)
+                            .child("roster");
 
-                adapter = new EnrolledClassesAdapter(enrolledClasses);
-                recyclerView.setAdapter(adapter);
+                    rosterReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot rosterSnapshot) {
+                            List<String> students = new ArrayList<>();
+                            for (DataSnapshot studentSnapshot : rosterSnapshot.getChildren()) {
+                                students.add(studentSnapshot.getKey());
+                            }
+
+                            enrolledClasses.add(new ClassData(className, students));
+                            adapter = new EnrolledClassesAdapter(enrolledClasses);
+                            recyclerView.setAdapter(adapter);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Handle the error, if any
+                        }
+                    });
+                }
             }
 
             @Override
