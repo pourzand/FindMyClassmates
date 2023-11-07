@@ -98,18 +98,7 @@
                 android:gravity="top"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Prompt 6 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="6. Rating" />
 
-            <Spinner
-                android:id="@+id/sixthRatingSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/rating_options"
-                android:layout_marginBottom="16dp"/>
         </LinearLayout>
     </ScrollView>
 

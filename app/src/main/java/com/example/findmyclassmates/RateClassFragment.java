@@ -10,8 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-public class RateClassFragment extends Fragment implements RatingFormFragment.RatingFormListener {
+public class RateClassFragment extends Fragment {
 
     private TextView classNameTextView;
     private StringBuilder concatenatedResponses = new StringBuilder();
@@ -25,14 +26,26 @@ public class RateClassFragment extends Fragment implements RatingFormFragment.Ra
 
         if (getArguments() != null) {
             selectedClass = getArguments().getParcelable("selectedClass");
-            classNameTextView.setText("Ratings for : " + selectedClass.getClassName());
+            classNameTextView.setText("Ratings for: " + selectedClass.getClassName());
         }
 
         Button buttonAddRating = view.findViewById(R.id.buttonAddRating);
         buttonAddRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RatingFormFragment ratingFormFragment = new RatingFormFragment();
+                Log.println(Log.DEBUG,"ratingClassFrag", "test0: " + selectedClass.getClassID());
+
+                // Create a RatingFormFragment and pass the classID
+                RatingFormFragment ratingFormFragment = new RatingFormFragment(selectedClass.getClassID());
+
+                // Set a listener to handle the form submission callback
+                ratingFormFragment.setRatingFormListener(new RatingFormFragment.RatingFormListener() {
+                    @Override
+                    public void onRatingFormSubmit(String ratingData) {
+                        // Handle the submitted rating data here
+                        updateConcatenatedResponses(ratingData);
+                    }
+                });
 
                 if (getFragmentManager() != null) {
                     getFragmentManager().beginTransaction()
@@ -49,14 +62,10 @@ public class RateClassFragment extends Fragment implements RatingFormFragment.Ra
         return view;
     }
 
-    @Override
-    public void onRatingFormSubmit(String concatenatedResponses) {
-        this.concatenatedResponses.append(concatenatedResponses).append("\n\n");
+    private void updateConcatenatedResponses(String ratingData) {
 
-        // Log the updated concatenatedResponses
-        Log.d("ConcatenatedResponses", this.concatenatedResponses.toString());
-
-        TextView responseTextView = getView().findViewById(R.id.responseTextView);
-        responseTextView.setText(this.concatenatedResponses.toString());
+        // Update the responseTextView
+//        TextView responseTextView = getView().findViewById(R.id.responseTextView);
+//        responseTextView.setText(ratingData);
     }
 }

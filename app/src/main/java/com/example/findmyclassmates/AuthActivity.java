@@ -2,20 +2,33 @@ package com.example.findmyclassmates;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+// firebase imports
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AuthActivity extends AppCompatActivity {
 
     Button signInButton, signUpButton;
     EditText usernameEditText, passwordEditText;
     BottomNavigationView bottomNavigationView;
+
+    // firebase
+    DatabaseReference dbReference;
+    FirebaseDatabase fbRoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +78,47 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void signIn(String username, String password) {
-        // Replace this with your actual sign-in logic.
-        // If sign-in is successful:
+        // If input is valid(which at the moment means not null):
         if (validateInput(username, password)) {
-            Intent mainActivityIntent = new Intent(AuthActivity.this, MainActivity.class);
-            startActivity(mainActivityIntent);
-            finish(); // Call this to finish the current Activity and remove it from the back stack.
+            fbRoot = FirebaseDatabase.getInstance();
+            dbReference = fbRoot.getReference(username);
+
+            dbReference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DataSnapshot dataSnapshot = task.getResult();
+                    if (dataSnapshot.exists()) {
+                        String retrievedPass = dataSnapshot.getValue(String.class);
+                        Log.println(Log.INFO, "Inside signIn", "retrievedPass: " + retrievedPass);
+
+                        if (retrievedPass.equals(password)) {
+                            // Correct credentials, continue with login flow
+                            Log.println(Log.INFO, "Inside signIn comparison", "Login successful");
+
+                            UserSession.getInstance().setUsername(username);
+
+                            Intent mainActivityIntent = new Intent(AuthActivity.this, MainActivity.class);
+                            startActivity(mainActivityIntent);
+                            finish();
+                        } else {
+                            // Incorrect password, indicate to the user
+                            Toast.makeText(AuthActivity.this, "Incorrect password", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // Username not found, indicate to the user
+                        Toast.makeText(AuthActivity.this, "Username not found", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    // Handle any errors that occurred during the database fetch
+                    Toast.makeText(AuthActivity.this, "An error occurred while fetching data", Toast.LENGTH_LONG).show();
+                }
+
+                // Always release resources when done
+                fbRoot = null;
+                dbReference = null;
+            });
         }
     }
+
 
     private void signUp() {
         // If sign-up is successful:
