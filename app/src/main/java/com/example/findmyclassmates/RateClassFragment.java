@@ -10,10 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-public class RateClassFragment extends Fragment implements RatingFormFragment.RatingFormListener {
+public class RateClassFragment extends Fragment /*implements RatingFormFragment.RatingFormListener*/ {
 
     private TextView classNameTextView;
-    private StringBuilder concatenatedResponses = new StringBuilder();
+    // private TextView responseTextView; // Comment this out if you don't need to display the concatenatedResponses
+    // private StringBuilder concatenatedResponses = new StringBuilder(); // Comment out as it's part of the response handling
     private ClassModel selectedClass;
 
     @Override
@@ -24,7 +25,9 @@ public class RateClassFragment extends Fragment implements RatingFormFragment.Ra
 
         if (getArguments() != null) {
             selectedClass = getArguments().getParcelable("selectedClass");
-            classNameTextView.setText("Ratings for : " + selectedClass.getClassName());
+            if (selectedClass != null) {
+                classNameTextView.setText("Ratings for : " + selectedClass.getClassName());
+            }
         }
 
         Button buttonAddRating = view.findViewById(R.id.buttonAddRating);
@@ -32,6 +35,7 @@ public class RateClassFragment extends Fragment implements RatingFormFragment.Ra
             @Override
             public void onClick(View v) {
                 RatingFormFragment ratingFormFragment = new RatingFormFragment();
+                // Pass any necessary data to ratingFormFragment here before transaction
 
                 if (getFragmentManager() != null) {
                     getFragmentManager().beginTransaction()
@@ -42,16 +46,22 @@ public class RateClassFragment extends Fragment implements RatingFormFragment.Ra
             }
         });
 
-        TextView responseTextView = view.findViewById(R.id.responseTextView);
-        responseTextView.setText(concatenatedResponses.toString());
+        // Comment out the TextView responseTextView setup since we're not displaying responses
+        // if (responseTextView != null) {
+        //     responseTextView.setText(concatenatedResponses.toString());
+        // }
 
         return view;
     }
 
+    // Comment out the onRatingFormSubmit method as it's used for receiving form responses
+    /*
     @Override
     public void onRatingFormSubmit(String concatenatedResponses) {
         this.concatenatedResponses.append(concatenatedResponses).append("\n\n");
-        TextView responseTextView = getView().findViewById(R.id.responseTextView);
-        responseTextView.setText(this.concatenatedResponses.toString());
+        if (responseTextView != null) {
+            responseTextView.setText(this.concatenatedResponses.toString());
+        }
     }
+    */
 }

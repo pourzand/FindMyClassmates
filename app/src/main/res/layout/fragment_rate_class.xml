@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- fragment_rate_class.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -15,21 +16,50 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp" />
 
-    <!-- Response TextView to display responses -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+    <!-- TextView for workload description -->
+    <TextView
+        android:id="@+id/workloadDescriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Workload: Moderate. Lot of group projects."
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
 
-        <TextView
-            android:id="@+id/responseTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:padding="8dp"
-            android:background="@android:color/darker_gray" />
-    </ScrollView>
+    <!-- TextView for class score -->
+    <TextView
+        android:id="@+id/classScoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score: 3"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- TextView for attendance policy -->
+    <TextView
+        android:id="@+id/attendancePolicyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attendance Policy: No attendance, just in class activities for participation credit"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- TextView for homework submission policy -->
+    <TextView
+        android:id="@+id/homeworkPolicyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Homework Policy: Yes late homework allowed, with an email 48 hours in advance."
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- TextView for other feedback -->
+    <TextView
+        android:id="@+id/otherFeedbackTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Other Feedback: Class is informative, make sure to keep up to date on readings."
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
 
     <!-- Back Button at the bottom -->
     <ImageView
