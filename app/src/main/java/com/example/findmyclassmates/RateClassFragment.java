@@ -1,7 +1,6 @@
 package com.example.findmyclassmates;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,10 +51,6 @@ public class RateClassFragment extends Fragment implements RatingFormFragment.Ra
     @Override
     public void onRatingFormSubmit(String concatenatedResponses) {
         this.concatenatedResponses.append(concatenatedResponses).append("\n\n");
-
-        // Log the updated concatenatedResponses
-        Log.d("ConcatenatedResponses", this.concatenatedResponses.toString());
-
         TextView responseTextView = getView().findViewById(R.id.responseTextView);
         responseTextView.setText(this.concatenatedResponses.toString());
     }

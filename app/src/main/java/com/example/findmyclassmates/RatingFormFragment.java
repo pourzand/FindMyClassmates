@@ -2,7 +2,6 @@ package com.example.findmyclassmates;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -52,6 +52,7 @@ public class RatingFormFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("beg", "hi darline "); // Add this
                 if (mListener != null) {
                     if (validateForm()) {
                         String response1 = prompt1EditText.getText().toString();
@@ -68,8 +69,8 @@ public class RatingFormFragment extends Fragment {
                                         "4. If the professor allows late homework submission: " + response4 + "\n" +
                                         "5. Other comments: " + response5 + "\n" +
                                         "6. Rating: " + rating;
-                        Log.d(rating,"rating");
-                        Log.d(concatenatedResponses,"c");
+                        Log.d("ConcatenatedResponses", concatenatedResponses); // Add this log statement
+
                         mListener.onRatingFormSubmit(concatenatedResponses);
 
                         if (getFragmentManager() != null) {
