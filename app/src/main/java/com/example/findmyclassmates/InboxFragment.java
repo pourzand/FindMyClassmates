@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
@@ -117,10 +118,11 @@ public class InboxFragment extends Fragment {
         builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String recipient = inputRecipient.getText().toString();
-                String message = inputMessage.getText().toString();
-                // TODO: Implement the sending logic here
-                sendMessage(recipient, message);
+                final String recipient = inputRecipient.getText().toString();
+                final String message = inputMessage.getText().toString();
+
+                // Check if the recipient is a valid user in the database
+                checkRecipientValidity(recipient, message);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -133,12 +135,41 @@ public class InboxFragment extends Fragment {
         builder.show();
     }
 
+    private void checkRecipientValidity(final String recipient, final String message) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference();
+
+        usersRef.child(recipient).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Recipient is a valid user in the database, proceed to send the message
+                    sendMessage(recipient, message);
+                } else {
+                    // Display a Toast warning if the recipient is not a valid user
+                    Toast.makeText(getContext(), "Invalid recipient. User not found.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors here
+            }
+        });
+    }
+
+
     private void sendMessage(final String recipient, final String messageText) {
         String currentUsername = UserSession.getInstance().getUsername();
 
+        if (messageText.trim().isEmpty()) {
+            // Display a Toast warning using the provided context
+            Toast.makeText(getContext(), "Message is empty. Try again", Toast.LENGTH_SHORT).show();
+            return; // Exit the function since the message is empty
+        }
+
         DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("messages");
 
-        // Update the sender's message ,  optional*****
+        // Update the sender's message, optional*****
         messagesRef.child(currentUsername).child(recipient).setValue(messageText);
 
         // Update the recipient's message

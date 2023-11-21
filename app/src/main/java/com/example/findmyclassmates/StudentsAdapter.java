@@ -1,6 +1,7 @@
 package com.example.findmyclassmates;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -44,7 +49,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
             holder.sendMessageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    composeMessage(v, studentName);
+                    composeMessage(v.getContext(), studentName);
                 }
             });
         }
@@ -55,14 +60,15 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
         return students.size();
     }
 
-    private void composeMessage(View view, String recipient) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+    // Add Context as a parameter to composeMessage method
+    private void composeMessage(Context context, String recipient) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Compose Message to " + recipient);
 
-        final EditText inputMessage = new EditText(view.getContext());
+        final EditText inputMessage = new EditText(context);
         inputMessage.setHint("Your message");
 
-        LinearLayout layout = new LinearLayout(view.getContext());
+        LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.addView(inputMessage);
 
@@ -73,7 +79,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
             public void onClick(DialogInterface dialog, int which) {
                 String message = inputMessage.getText().toString();
                 // TODO: Implement the sending logic here
-                sendMessage(recipient, message);
+                sendMessage(recipient, message, context);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -86,10 +92,26 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
         builder.show();
     }
 
-    private void sendMessage(String recipient, String messageText) {
-        // TODO: Implement your message sending logic here
-        // This might involve sending data to your backend server or updating a local database
+    // Update sendMessage method to accept Context parameter
+    private void sendMessage(String recipient, String messageText, Context context) {
+        String currentUsername = UserSession.getInstance().getUsername();
+
+        // Check if the message is empty
+        if (messageText.trim().isEmpty()) {
+            // Display a Toast warning using the provided context
+            Toast.makeText(context, "Message is empty. Try again", Toast.LENGTH_SHORT).show();
+            return; // Exit the function since the message is empty
+        }
+
+        DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("messages");
+
+        // Update the sender's message, optional*****
+        messagesRef.child(currentUsername).child(recipient).setValue(messageText);
+
+        // Update the recipient's message
+        messagesRef.child(recipient).child(currentUsername).setValue(messageText);
     }
+
 
     public static class StudentViewHolder extends RecyclerView.ViewHolder {
         public TextView studentTextView;

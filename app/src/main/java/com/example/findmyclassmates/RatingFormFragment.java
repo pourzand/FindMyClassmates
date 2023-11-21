@@ -63,6 +63,13 @@ public class RatingFormFragment extends Fragment {
                 String response4 = prompt4EditText.getText().toString();
                 String response5 = prompt5EditText.getText().toString();
 
+                // Check if any of the fields (except response5) is blank
+                if (response1.isEmpty() || response2.isEmpty() || response3.isEmpty() || response4.isEmpty()) {
+                    // Display a Toast warning
+                    Toast.makeText(getActivity(), "Please fill in all fields except 'Other comments'", Toast.LENGTH_SHORT).show();
+                    return; // Exit the function since a field is blank
+                }
+
                 String concatenatedResponses =
                         "1. The workload of the class: " + response1 + "\n" +
                                 "2. The score they would like to give to this class: " + response2 + "\n" +
