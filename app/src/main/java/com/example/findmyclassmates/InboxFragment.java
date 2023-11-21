@@ -136,6 +136,12 @@ public class InboxFragment extends Fragment {
     }
 
     private void checkRecipientValidity(final String recipient, final String message) {
+        if (recipient.trim().isEmpty()) {
+            // Display a Toast warning using the provided context
+            Toast.makeText(getContext(), "Recipient is empty. Try again", Toast.LENGTH_SHORT).show();
+            return; // Exit the function since the message is empty
+        }
+
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference();
 
         usersRef.child(recipient).addListenerForSingleValueEvent(new ValueEventListener() {
