@@ -62,8 +62,10 @@ public class InboxFragment extends Fragment {
     }
 
     private void loadMessages() {
+        String currentUsername = UserSession.getInstance().getUsername();
+
         // Assuming your Firebase Realtime Database reference is properly set up
-        DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("messages");
+        DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("messages").child(currentUsername);
 
         // Add a ValueEventListener to fetch data from Firebase
         messagesRef.addValueEventListener(new ValueEventListener() {
@@ -71,17 +73,14 @@ public class InboxFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 messages.clear(); // Clear the existing list before adding new messages
 
-                // Iterate through the messages node
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    // Iterate through the messages for each user
-                    for (DataSnapshot messageSnapshot : userSnapshot.getChildren()) {
-                        String sender = userSnapshot.getKey(); // Get the sender's user ID
-                        String messageText = messageSnapshot.getValue(String.class); // Get the message text
+                // Iterate through the messages for the current user
+                for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                    String sender = messageSnapshot.getKey(); // Get the sender's user ID
+                    String messageText = messageSnapshot.getValue(String.class); // Get the message text
 
-                        // Create a Message object and add it to the messages list
-                        Message message = new Message(sender, messageText);
-                        messages.add(message);
-                    }
+                    // Create a Message object and add it to the messages list
+                    Message message = new Message(sender, messageText);
+                    messages.add(message);
                 }
 
                 // Notify the adapter that the data has changed
@@ -94,6 +93,7 @@ public class InboxFragment extends Fragment {
             }
         });
     }
+
 
 
     private void composeMessage() {
@@ -133,11 +133,17 @@ public class InboxFragment extends Fragment {
         builder.show();
     }
 
-    private void sendMessage(String recipient, String messageText) {
-        // TODO: Implement your message sending logic here
-        // This might involve sending data to your backend server or updating a local database
+    private void sendMessage(final String recipient, final String messageText) {
+        String currentUsername = UserSession.getInstance().getUsername();
+
+        DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("messages");
+
+        // Update the sender's message ,  optional*****
+        messagesRef.child(currentUsername).child(recipient).setValue(messageText);
+
+        // Update the recipient's message
+        messagesRef.child(recipient).child(currentUsername).setValue(messageText);
     }
 
 
-    // Add any additional code here, like methods to fetch messages from your database
 }
