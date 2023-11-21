@@ -3,6 +3,8 @@ package com.example.findmyclassmates;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,12 @@ import android.widget.LinearLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class InboxFragment extends Fragment {
 
@@ -54,12 +62,39 @@ public class InboxFragment extends Fragment {
     }
 
     private void loadMessages() {
-        // TODO: Fetch messages from your data source and update the adapter
-        // Example:
-        messages.add(new Message("User1", "Hello!"));
-        messages.add(new Message("User2", "How are you?"));
-//        adapter.notifyDataSetChanged();
+        // Assuming your Firebase Realtime Database reference is properly set up
+        DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("messages");
+
+        // Add a ValueEventListener to fetch data from Firebase
+        messagesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                messages.clear(); // Clear the existing list before adding new messages
+
+                // Iterate through the messages node
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    // Iterate through the messages for each user
+                    for (DataSnapshot messageSnapshot : userSnapshot.getChildren()) {
+                        String sender = userSnapshot.getKey(); // Get the sender's user ID
+                        String messageText = messageSnapshot.getValue(String.class); // Get the message text
+
+                        // Create a Message object and add it to the messages list
+                        Message message = new Message(sender, messageText);
+                        messages.add(message);
+                    }
+                }
+
+                // Notify the adapter that the data has changed
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors here
+            }
+        });
     }
+
 
     private void composeMessage() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
