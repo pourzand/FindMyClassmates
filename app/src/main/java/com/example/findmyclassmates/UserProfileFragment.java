@@ -49,6 +49,7 @@ public class UserProfileFragment extends Fragment {
 
         String currentUsername = UserSession.getInstance().getUsername(); //get username
         // Initialize DatabaseReference
+        Log.println(Log.INFO, "Inside user profile", "hmmm: " + currentUsername);
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("profiles").child(currentUsername);
 
 
