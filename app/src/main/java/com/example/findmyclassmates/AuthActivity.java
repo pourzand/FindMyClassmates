@@ -63,7 +63,7 @@ public class AuthActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validateInput(String username, String password) {
+    boolean validateInput(String username, String password) {
         // Here you would check for validity, e.g., non-empty fields
         if (username.isEmpty()) {
             usernameEditText.setError("Username cannot be empty");
@@ -77,7 +77,7 @@ public class AuthActivity extends AppCompatActivity {
         return true;
     }
 
-    private void signIn(String username, String password) {
+    void signIn(String username, String password) {
         // If input is valid(which at the moment means not null):
         if (validateInput(username, password)) {
             fbRoot = FirebaseDatabase.getInstance();

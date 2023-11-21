@@ -43,4 +43,11 @@ dependencies {
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation ("androidx.test:runner:1.4.0")
     androidTestImplementation ("androidx.test.espresso:espresso-intents:3.4.0")
+
+    // Unit testing dependencies
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:3.11.2")
+    testImplementation("org.robolectric:robolectric:4.6.1") // Use the latest version
+    androidTestImplementation("androidx.test:core:1.4.0")
+
 }
