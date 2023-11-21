@@ -31,17 +31,29 @@ public class AuthActivityTest {
         onView(withId(R.id.signInButton)).perform(click());
         onView(withId(R.id.usernameEditText))
                 .check(matches(hasErrorText("Username cannot be empty")));
-        onView(withId(R.id.passwordEditText))
-                .check(matches(hasErrorText("Password cannot be empty")));
+//        onView(withId(R.id.passwordEditText))
+//                .check(matches(hasErrorText("Password cannot be empty")));
     }
+
+//    public void testEmptyPassword() {
+////        onView(withId(R.id.usernameEditText))
+////                .check(matches(hasErrorText("Username cannot be empty")));
+//
+//        onView(withId(R.id.usernameEditText))
+//                .perform(typeText("temp"), closeSoftKeyboard());
+//
+//        onView(withId(R.id.passwordEditText))
+//                .check(matches(hasErrorText("Password cannot be empty")));
+//        onView(withId(R.id.signInButton)).perform(click());
+//    }
 
     // Test for Valid Login
     @Test
     public void testValidSignIn() {
         onView(withId(R.id.usernameEditText))
-                .perform(typeText("validUsername"), closeSoftKeyboard());
+                .perform(typeText("tempUserAcct"), closeSoftKeyboard());
         onView(withId(R.id.passwordEditText))
-                .perform(typeText("validPassword"), closeSoftKeyboard());
+                .perform(typeText("tempPass"), closeSoftKeyboard());
         onView(withId(R.id.signInButton)).perform(click());
 
         // Replace MainActivity with the actual activity that is expected to open

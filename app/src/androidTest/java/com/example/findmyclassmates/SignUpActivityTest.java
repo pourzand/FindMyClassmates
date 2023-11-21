@@ -36,11 +36,9 @@ public class SignUpActivityTest {
     // Test for Only Username Filled
     @Test
     public void testOnlyUsernameFilled() {
-        onView(withId(R.id.usernameEditTextSignUp))
-                .perform(typeText("testUser"), closeSoftKeyboard());
+        onView(withId(R.id.usernameEditTextSignUp)).perform(typeText("testUser"), closeSoftKeyboard());
         onView(withId(R.id.signUpButtonSignUpPage)).perform(click());
-        onView(withText("All fields must be filled"))
-                .check(matches(isDisplayed()));
+        onView(withText("All fields must be filled")).check(matches(isDisplayed()));
     }
 
     // Test for Only Password Filled
@@ -49,8 +47,7 @@ public class SignUpActivityTest {
         onView(withId(R.id.passwordEditTextSignUp))
                 .perform(typeText("password"), closeSoftKeyboard());
         onView(withId(R.id.signUpButtonSignUpPage)).perform(click());
-        onView(withText("All fields must be filled"))
-                .check(matches(isDisplayed()));
+        onView(withText("All fields must be filled")).check(matches(isDisplayed()));
     }
 
     // Test for Password and Repeat Password Do Not Match
