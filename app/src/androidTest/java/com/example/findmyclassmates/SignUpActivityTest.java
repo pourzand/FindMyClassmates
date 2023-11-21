@@ -33,23 +33,6 @@ public class SignUpActivityTest {
                 .check(matches(isDisplayed()));
     }
 
-    // Test for Only Username Filled
-    @Test
-    public void testOnlyUsernameFilled() {
-        onView(withId(R.id.usernameEditTextSignUp)).perform(typeText("testUser"), closeSoftKeyboard());
-        onView(withId(R.id.signUpButtonSignUpPage)).perform(click());
-        onView(withText("All fields must be filled")).check(matches(isDisplayed()));
-    }
-
-    // Test for Only Password Filled
-    @Test
-    public void testOnlyPasswordFilled() {
-        onView(withId(R.id.passwordEditTextSignUp))
-                .perform(typeText("password"), closeSoftKeyboard());
-        onView(withId(R.id.signUpButtonSignUpPage)).perform(click());
-        onView(withText("All fields must be filled")).check(matches(isDisplayed()));
-    }
-
     // Test for Password and Repeat Password Do Not Match
     @Test
     public void testPasswordsDoNotMatch() {
@@ -79,7 +62,25 @@ public class SignUpActivityTest {
         intended(hasComponent(MainActivity.class.getName()));
     }
 
-    // Additional tests for other scenarios can be added here
+    // Test for Only Username Filled
+    @Test
+    public void testOnlyUsernameFilled() {
+        onView(withId(R.id.usernameEditTextSignUp))
+                .perform(typeText("testUser"), closeSoftKeyboard());
+        onView(withId(R.id.signUpButtonSignUpPage)).perform(click());
+        onView(withText("All fields must be filled"))
+                .check(matches(isDisplayed()));
+    }
+
+    // Test for Only Password Filled
+    @Test
+    public void testOnlyPasswordFilled() {
+        onView(withId(R.id.passwordEditTextSignUp))
+                .perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.signUpButtonSignUpPage)).perform(click());
+        onView(withText("All fields must be filled"))
+                .check(matches(isDisplayed()));
+    }
 
 }
 
