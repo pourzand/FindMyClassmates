@@ -13,7 +13,7 @@ import java.util.List;
 
 public class EnrolledClassesAdapter extends RecyclerView.Adapter<EnrolledClassesAdapter.ClassViewHolder> {
 
-    private List<ClassData> enrolledClasses;
+    List<ClassData> enrolledClasses;
 
     public EnrolledClassesAdapter(List<ClassData> enrolledClasses) {
         this.enrolledClasses = enrolledClasses;

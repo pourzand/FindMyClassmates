@@ -27,9 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class InboxFragment extends Fragment {
 
-    private RecyclerView recyclerViewMessages;
+    RecyclerView recyclerViewMessages;
     private FloatingActionButton fabCompose;
-    private MessageAdapter adapter;
+    MessageAdapter adapter;
     private List<Message> messages;
 
     @Override
@@ -62,7 +62,7 @@ public class InboxFragment extends Fragment {
         return view;
     }
 
-    private void loadMessages() {
+    void loadMessages() {
         String currentUsername = UserSession.getInstance().getUsername();
 
         // Assuming your Firebase Realtime Database reference is properly set up
@@ -164,7 +164,7 @@ public class InboxFragment extends Fragment {
     }
 
 
-    private void sendMessage(final String recipient, final String messageText) {
+    void sendMessage(final String recipient, final String messageText) {
         String currentUsername = UserSession.getInstance().getUsername();
 
         if (messageText.trim().isEmpty()) {
