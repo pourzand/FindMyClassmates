@@ -46,8 +46,12 @@ public class EnrolledClassesAdapterTest {
 
     // Tests for ClassData
     @Test
-    public void classData_gettersReturnCorrectValues() {
+    public void classData_classNameGetterReturnsCorrectValue() {
         assertEquals(expectedClassName, classData.getClassName());
+    }
+
+    @Test
+    public void classData_studentsGetterReturnsCorrectValue() {
         assertEquals(expectedStudents, classData.getStudents());
     }
 
