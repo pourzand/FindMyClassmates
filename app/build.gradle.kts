@@ -47,7 +47,7 @@ dependencies {
     // Unit testing dependencies
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:3.11.2")
-    testImplementation("org.robolectric:robolectric:4.6.1") // Use the latest version
+    testImplementation("org.robolectric:robolectric:4.7.3") // Use the latest version available
     androidTestImplementation("androidx.test:core:1.4.0")
 
 }

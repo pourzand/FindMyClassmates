@@ -56,7 +56,7 @@ public class AuthActivityTest {
                 .perform(typeText("tempPass"), closeSoftKeyboard());
         onView(withId(R.id.signInButton)).perform(click());
 
-        // Replace MainActivity with the actual activity that is expected to open
+        // If using Idling Resources, Espresso will wait for the async task to complete
         intended(hasComponent(MainActivity.class.getName()));
     }
 
