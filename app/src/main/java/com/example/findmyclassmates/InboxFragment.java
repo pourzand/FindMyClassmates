@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,34 +67,38 @@ public class InboxFragment extends Fragment {
     void loadMessages() {
         String currentUsername = UserSession.getInstance().getUsername();
 
-        // Assuming your Firebase Realtime Database reference is properly set up
-        DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("messages").child(currentUsername);
+        if(currentUsername != null) {
+            // Assuming your Firebase Realtime Database reference is properly set up
+            DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference().child("messages").child(currentUsername);
 
-        // Add a ValueEventListener to fetch data from Firebase
-        messagesRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                messages.clear(); // Clear the existing list before adding new messages
+            // Add a ValueEventListener to fetch data from Firebase
+            messagesRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    messages.clear(); // Clear the existing list before adding new messages
 
-                // Iterate through the messages for the current user
-                for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
-                    String sender = messageSnapshot.getKey(); // Get the sender's user ID
-                    String messageText = messageSnapshot.getValue(String.class); // Get the message text
+                    // Iterate through the messages for the current user
+                    for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                        String sender = messageSnapshot.getKey(); // Get the sender's user ID
+                        String messageText = messageSnapshot.getValue(String.class); // Get the message text
 
-                    // Create a Message object and add it to the messages list
-                    Message message = new Message(sender, messageText);
-                    messages.add(message);
+                        // Create a Message object and add it to the messages list
+                        Message message = new Message(sender, messageText);
+                        messages.add(message);
+                    }
+
+                    // Notify the adapter that the data has changed
+                    adapter.notifyDataSetChanged();
                 }
 
-                // Notify the adapter that the data has changed
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors here
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle errors here
+                }
+            });
+        } else {
+            Log.println(Log.INFO, "inboxFrag", "username not provided since in testcase rn");
+        }
     }
 
 
@@ -104,8 +110,12 @@ public class InboxFragment extends Fragment {
         // Set up the input fields
         final EditText inputRecipient = new EditText(getContext());
         inputRecipient.setHint("Recipient");
+        inputRecipient.setTag("inputRecipient"); // Set a tag to identify this view later
+
         final EditText inputMessage = new EditText(getContext());
         inputMessage.setHint("Your message");
+        inputMessage.setTag("inputMessage"); // Set a tag to identify this view later
+
 
         LinearLayout layout = new LinearLayout(getContext());
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -122,7 +132,7 @@ public class InboxFragment extends Fragment {
                 final String message = inputMessage.getText().toString();
 
                 // Check if the recipient is a valid user in the database
-                checkRecipientValidity(recipient, message);
+                checkRecipientValidity(recipient, message, inputRecipient, inputMessage);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -135,11 +145,18 @@ public class InboxFragment extends Fragment {
         builder.show();
     }
 
-    private void checkRecipientValidity(final String recipient, final String message) {
+    private void checkRecipientValidity(final String recipient, final String message, EditText inputRecipient, EditText inputMessage) {
         if (recipient.trim().isEmpty()) {
-            // Display a Toast warning using the provided context
-            Toast.makeText(getContext(), "Recipient is empty. Try again", Toast.LENGTH_SHORT).show();
+            inputRecipient.setError("Recipient is empty. Try again");
+
+//            Toast.makeText(getContext(), "Recipient is empty. Try again", Toast.LENGTH_SHORT).show();
             return; // Exit the function since the message is empty
+        }
+
+        if (message.trim().isEmpty()) {
+            inputMessage.setError("Message is empty. Try again");
+
+            return;
         }
 
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference();
@@ -151,8 +168,7 @@ public class InboxFragment extends Fragment {
                     // Recipient is a valid user in the database, proceed to send the message
                     sendMessage(recipient, message);
                 } else {
-                    // Display a Toast warning if the recipient is not a valid user
-                    Toast.makeText(getContext(), "Invalid recipient. User not found.", Toast.LENGTH_SHORT).show();
+                    inputRecipient.setError("Invalid recipient. User not found.");
                 }
             }
 

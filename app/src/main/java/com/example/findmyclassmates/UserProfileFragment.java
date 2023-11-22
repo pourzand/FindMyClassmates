@@ -50,68 +50,74 @@ public class UserProfileFragment extends Fragment {
         String currentUsername = UserSession.getInstance().getUsername(); //get username
         // Initialize DatabaseReference
         Log.println(Log.INFO, "Inside user profile", "hmmm: " + currentUsername);
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("profiles").child(currentUsername);
+        if (currentUsername != null) {
+
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("profiles").child(currentUsername);
 
 
-        nameEditText = view.findViewById(R.id.nameEditText);
-        roleSpinner = view.findViewById(R.id.roleSpinner);
-        uscIdEditText = view.findViewById(R.id.uscIdEditText);
-        updateButton = view.findViewById(R.id.updateButton);
-        profileImageView = view.findViewById(R.id.profileImageView);
+            nameEditText = view.findViewById(R.id.nameEditText);
+            roleSpinner = view.findViewById(R.id.roleSpinner);
+            uscIdEditText = view.findViewById(R.id.uscIdEditText);
+            updateButton = view.findViewById(R.id.updateButton);
+            profileImageView = view.findViewById(R.id.profileImageView);
 
-        // Populate the role spinner
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                requireContext(),
-                R.array.roles,
-                R.layout.custom_spinner_dropdown_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        roleSpinner.setAdapter(adapter);
+            // Populate the role spinner
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                    requireContext(),
+                    R.array.roles,
+                    R.layout.custom_spinner_dropdown_item
+            );
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            roleSpinner.setAdapter(adapter);
 
-        Log.println(Log.ASSERT, "test","currUser  is " + currentUsername);
+            Log.println(Log.ASSERT, "test", "currUser  is " + currentUsername);
 
-        updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String newName = nameEditText.getText().toString();
+            updateButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String newName = nameEditText.getText().toString();
 
-                String newRole = roleSpinner.getSelectedItem().toString();
-                String newUscId = uscIdEditText.getText().toString();
+                    String newRole = roleSpinner.getSelectedItem().toString();
+                    String newUscId = uscIdEditText.getText().toString();
 
-                // Call a function to update user data
-                updateUser(newName, newRole, newUscId);
-            }
-        });
-
-        profileImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImagePickerDialog();
-            }
-        });
-
-        // Attach a ValueEventListener to retrieve user data
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Retrieve user data from the database
-                    String name = dataSnapshot.child("name").getValue(String.class);
-                    String role = dataSnapshot.child("role").getValue(String.class);
-                    String uscId = dataSnapshot.child("ID").getValue(String.class);
-
-                    // Update the UI with the retrieved data
-                    nameEditText.setText(name);
-                    roleSpinner.setSelection(getIndexFromRoleSpinner(role));
-                    uscIdEditText.setText(uscId);
+                    // Call a function to update user data
+                    updateUser(newName, newRole, newUscId);
                 }
-            }
+            });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle any errors here
-            }
-        });
+            profileImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showImagePickerDialog();
+                }
+            });
+
+            // Attach a ValueEventListener to retrieve user data
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        // Retrieve user data from the database
+                        String name = dataSnapshot.child("name").getValue(String.class);
+                        String role = dataSnapshot.child("role").getValue(String.class);
+                        String uscId = dataSnapshot.child("ID").getValue(String.class);
+
+                        // Update the UI with the retrieved data
+                        nameEditText.setText(name);
+                        roleSpinner.setSelection(getIndexFromRoleSpinner(role));
+                        uscIdEditText.setText(uscId);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Handle any errors here
+                }
+            });
+        } else {
+            Log.println(Log.INFO, "userprofileFrag", "username not provided since in testcase rn");
+
+        }
 
         return view;
     }

@@ -63,11 +63,17 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validateInput(String username, String password, String repeatPassword) {
         if (username.isEmpty() || password.isEmpty() || repeatPassword.isEmpty()) {
-            Toast.makeText(SignUpActivity.this, "All fields must be filled", Toast.LENGTH_LONG).show();
+//            Toast.makeText(SignUpActivity.this, "All fields must be filled", Toast.LENGTH_LONG).show();
+            passwordEditText.setError("All fields must be filled");
+            usernameEditText.setError("All fields must be filled");
             return false;
         }
         if (!password.equals(repeatPassword)) {
-            Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+            //Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+            passwordEditText.setError("Passwords do not match");
+            repeatPasswordEditText.setError("Passwords do not match");
+
+
             return false;
         }
         return true;

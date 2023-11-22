@@ -65,8 +65,8 @@ public class RatingFormFragment extends Fragment {
 
                 // Check if any of the fields (except response5) is blank
                 if (response1.isEmpty() || response2.isEmpty() || response3.isEmpty() || response4.isEmpty()) {
-                    // Display a Toast warning
-                    Toast.makeText(getActivity(), "Please fill in all fields except 'Other comments'", Toast.LENGTH_SHORT).show();
+                    prompt1EditText.setError("Fields 1-4 cannot be empty");
+
                     return; // Exit the function since a field is blank
                 }
 
