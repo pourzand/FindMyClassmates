@@ -37,7 +37,7 @@ public class SignUpActivityTest {
 
     // Test for Empty Fields
     @Test
-    public void testEmptyFields() {
+    public void testEmptyUsername() {
         onView(withId(R.id.signUpButtonSignUpPage)).perform(ViewActions.click());
 
         // Check if the appropriate error message is displayed for usernameEditText
@@ -48,7 +48,7 @@ public class SignUpActivityTest {
 
     }
 
-//     Test for Password Mismatch
+    //     Test for Password Mismatch
     @Test
     public void testPasswordMismatch() {
         // Enter values into the fields
@@ -66,5 +66,96 @@ public class SignUpActivityTest {
         onView(withId(R.id.repeatPasswordEditText)).check(matches(hasErrorText("Passwords do not match")));
     }
 
+    @Test
+    public void testPasswordCriteriaLowerCase() {
+        // Enter values into the fields
+        onView(withId(R.id.usernameEditTextSignUp)).perform(ViewActions.typeText("testuser"));
+        onView(withId(R.id.passwordEditTextSignUp)).perform(ViewActions.typeText("PASSWORD1"));
+        onView(withId(R.id.repeatPasswordEditText)).perform(ViewActions.typeText("PASSWORD1"));
+
+        // Click on the sign-up button
+        onView(withId(R.id.signUpButtonSignUpPage)).perform(ViewActions.click());
+
+        // Check if the appropriate error message is displayed for passwordEditText
+        onView(withId(R.id.passwordEditTextSignUp)).check(matches(hasErrorText("Password must contain at least one lowercase letter")));
+    }
+
+    // Test for Password Criteria: At least one uppercase letter
+    @Test
+    public void testPasswordCriteriaUpperCase() {
+        // Enter values into the fields
+        onView(withId(R.id.usernameEditTextSignUp)).perform(ViewActions.typeText("testuser"));
+        onView(withId(R.id.passwordEditTextSignUp)).perform(ViewActions.typeText("password1"));
+        onView(withId(R.id.repeatPasswordEditText)).perform(ViewActions.typeText("password1"));
+
+        // Click on the sign-up button
+        onView(withId(R.id.signUpButtonSignUpPage)).perform(ViewActions.click());
+
+        // Check if the appropriate error message is displayed for passwordEditText
+        onView(withId(R.id.passwordEditTextSignUp)).check(matches(hasErrorText("Password must contain at least one uppercase letter")));
+    }
+
+    // Test for Password Criteria: At least one digit
+    @Test
+    public void testPasswordCriteriaDigit() {
+        // Enter values into the fields
+        onView(withId(R.id.usernameEditTextSignUp)).perform(ViewActions.typeText("testuser"));
+        onView(withId(R.id.passwordEditTextSignUp)).perform(ViewActions.typeText("Password"));
+        onView(withId(R.id.repeatPasswordEditText)).perform(ViewActions.typeText("Password"));
+
+        // Click on the sign-up button
+        onView(withId(R.id.signUpButtonSignUpPage)).perform(ViewActions.click());
+
+        // Check if the appropriate error message is displayed for passwordEditText
+        onView(withId(R.id.passwordEditTextSignUp)).check(matches(hasErrorText("Password must contain at least one digit")));
+    }
+
+    // Test for Password Criteria: At least one special character
+    @Test
+    public void testPasswordCriteriaSpecialCharacter() {
+        // Enter values into the fields
+        onView(withId(R.id.usernameEditTextSignUp)).perform(ViewActions.typeText("testuser"));
+        onView(withId(R.id.passwordEditTextSignUp)).perform(ViewActions.typeText("Password1"));
+        onView(withId(R.id.repeatPasswordEditText)).perform(ViewActions.typeText("Password1"));
+
+        // Click on the sign-up button
+        onView(withId(R.id.signUpButtonSignUpPage)).perform(ViewActions.click());
+
+        // Check if the appropriate error message is displayed for passwordEditText
+        onView(withId(R.id.passwordEditTextSignUp)).check(matches(hasErrorText("Password must contain at least one special character")));
+    }
+
+    // Test for Password Criteria: Minimum length of 8 characters
+    @Test
+    public void testPasswordCriteriaMinLength() {
+        // Enter values into the fields
+        onView(withId(R.id.usernameEditTextSignUp)).perform(ViewActions.typeText("testuser"));
+        onView(withId(R.id.passwordEditTextSignUp)).perform(ViewActions.typeText("Pass?1"));
+        onView(withId(R.id.repeatPasswordEditText)).perform(ViewActions.typeText("Pass?1"));
+
+        // Click on the sign-up button
+        onView(withId(R.id.signUpButtonSignUpPage)).perform(ViewActions.click());
+
+        // Check if the appropriate error message is displayed for passwordEditText
+        onView(withId(R.id.passwordEditTextSignUp)).check(matches(hasErrorText("Password must be at least 8 characters long")));
+    }
+
+    // Test for Password Criteria: No consecutive repeated characters
+    @Test
+    public void testPasswordCriteriaNoConsecutiveRepeats() {
+        // Enter values into the fields
+        onView(withId(R.id.usernameEditTextSignUp)).perform(ViewActions.typeText("testuser"));
+        onView(withId(R.id.passwordEditTextSignUp)).perform(ViewActions.typeText("Password?11"));
+        onView(withId(R.id.repeatPasswordEditText)).perform(ViewActions.typeText("Password?11"));
+
+        // Click on the sign-up button
+        onView(withId(R.id.signUpButtonSignUpPage)).perform(ViewActions.click());
+
+        // Check if the appropriate error message is displayed for passwordEditText
+        onView(withId(R.id.passwordEditTextSignUp)).check(matches(hasErrorText("Password cannot contain consecutive repeated characters")));
+    }
+
+
     // Add more test cases as needed based on your requirements
 }
+
