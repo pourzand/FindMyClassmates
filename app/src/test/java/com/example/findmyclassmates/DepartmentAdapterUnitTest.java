@@ -31,24 +31,33 @@ public class DepartmentAdapterUnitTest {
 
     @Test
     public void testOnDepartmentClick() {
-        // Simulating each department click
         for (int i = 0; i < departments.size(); i++) {
-            // Assuming you have a way to simulate the ViewHolder creation and item click
-            // If you need to simulate item clicks, you might need additional setup here
-
-            // Simulate item click
             mockListener.onDepartmentClick(departments.get(i));
-
-            // Verify if the listener's onDepartmentClick method is called with the correct department name
             verify(mockListener, times(1)).onDepartmentClick(departments.get(i));
         }
     }
 
     @Test
+    public void testOnDepartmentClickAfterUpdate() {
+        List<String> newDepartments = Arrays.asList("Biology", "Computer Science");
+        adapter.updateDepartmentList(newDepartments);
+
+        for (int i = 0; i < newDepartments.size(); i++) {
+            mockListener.onDepartmentClick(newDepartments.get(i));
+            verify(mockListener, times(1)).onDepartmentClick(newDepartments.get(i));
+        }
+    }
+
+    @Test
+    public void testOnDepartmentClickForNonExistentDepartment() {
+        // Verify that the listener's onDepartmentClick method is never called with "NonExistentDepartment"
+        verify(mockListener, times(0)).onDepartmentClick("NonExistentDepartment");
+    }
+
+    @Test
     public void testItemCount() {
-        // Assert that getItemCount() returns the correct count
         assertEquals("Item count should match the number of departments", departments.size(), adapter.getItemCount());
     }
 
-    // You can add more test cases here to cover other aspects of your adapter...
+    // Additional test cases as needed...
 }
