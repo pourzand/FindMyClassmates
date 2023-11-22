@@ -24,10 +24,12 @@ public class ClassModelUnitTest {
     }
 
     @Test
-    public void gettersAndSetters_workCorrectly() {
-        // Testing Getters
+    public void departmentAndClassNameGettersWorkCorrectly() {
         assertEquals(testDepartment, classModel.getDepartment());
         assertEquals(testClassName, classModel.getClassName());
+    }
+    @Test
+    public void gettersWorkCorrectly() {
         assertEquals(testDescription, classModel.getDescription());
         assertEquals(testUnits, classModel.getUnits());
         assertEquals(testTime, classModel.getTime());
@@ -35,8 +37,10 @@ public class ClassModelUnitTest {
         assertEquals(testProfessor, classModel.getProfessor());
         assertEquals(testLocation, classModel.getLocation());
         assertEquals(testClassID, classModel.getClassID());
+    }
 
-        // Testing Setters
+    @Test
+    public void departmentAndClassNameSettersWorkCorrectly() {
         String newDepartment = "new department";
         classModel.setDepartment(newDepartment);
         assertEquals(newDepartment, classModel.getDepartment());
@@ -44,7 +48,9 @@ public class ClassModelUnitTest {
         String newClassName = "new class name";
         classModel.setClassName(newClassName);
         assertEquals(newClassName, classModel.getClassName());
-
+    }
+    @Test
+    public void settersWorkCorrectly() {
         String newDescription = "new description";
         classModel.setDescription(newDescription);
         assertEquals(newDescription, classModel.getDescription());
@@ -73,4 +79,5 @@ public class ClassModelUnitTest {
         classModel.setClassID(newClassID);
         assertEquals(newClassID, classModel.getClassID());
     }
+
 }
