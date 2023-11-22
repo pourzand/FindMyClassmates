@@ -76,6 +76,64 @@ public class SignUpActivity extends AppCompatActivity {
 
             return false;
         }
+
+        // Check password criteria
+        if (!isLowerCasePresent(password)) {
+            passwordEditText.setError("Password must contain at least one lowercase letter");
+            return false;
+        }
+
+        if (!isUpperCasePresent(password)) {
+            passwordEditText.setError("Password must contain at least one uppercase letter");
+            return false;
+        }
+
+        if (!isDigitPresent(password)) {
+            passwordEditText.setError("Password must contain at least one digit");
+            return false;
+        }
+
+        if (!isSpecialCharacterPresent(password)) {
+            passwordEditText.setError("Password must contain at least one special character");
+            return false;
+        }
+
+        if (password.length() < 8) {
+            passwordEditText.setError("Password must be at least 8 characters long");
+            return false;
+        }
+
+        if (hasConsecutiveRepeats(password)) {
+            passwordEditText.setError("Password cannot contain consecutive repeated characters");
+            return false;
+        }
+
+
         return true;
+    }
+
+    private boolean isLowerCasePresent(String password) {
+        return !password.equals(password.toUpperCase());
+    }
+
+    private boolean isUpperCasePresent(String password) {
+        return !password.equals(password.toLowerCase());
+    }
+
+    private boolean isDigitPresent(String password) {
+        return password.matches(".*\\d.*");
+    }
+
+    private boolean isSpecialCharacterPresent(String password) {
+        return !password.matches("[A-Za-z0-9 ]*");
+    }
+
+    private boolean hasConsecutiveRepeats(String password) {
+        for (int i = 0; i < password.length() - 1; i++) {
+            if (password.charAt(i) == password.charAt(i + 1)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
