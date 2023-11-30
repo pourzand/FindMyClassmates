@@ -2,15 +2,17 @@ package com.example.findmyclassmates;
 
 public class RatingData {
     private String username;
-    private String rating;
+    private String ratingText;
+    private String className;
     private int upvotes;
     private boolean isUpvotedByCurrentUser;
     private int downvotes; // New field for downvotes
     private boolean isDownvotedByCurrentUser; // New field to track if current user downvoted
 
-    public RatingData(String username, String rating) {
+    public RatingData(String username, String rating, String classSelected) {
         this.username = username;
-        this.rating = rating;
+        this.ratingText = rating;
+        this.className = classSelected;
         this.upvotes = 0;
         this.downvotes = 0;
     }
@@ -18,6 +20,10 @@ public class RatingData {
     // Add getter and setter for upvotes
     public int getUpvotes() {
         return upvotes;
+    }
+
+    public String getClassName() {
+        return className;
     }
 
     public void setUpvotes(int upvotes) {
@@ -37,8 +43,8 @@ public class RatingData {
         return username;
     }
 
-    public String getRating() {
-        return rating;
+    public String getRatingText() {
+        return ratingText;
     }
 
     public boolean isUpvotedByCurrentUser() {

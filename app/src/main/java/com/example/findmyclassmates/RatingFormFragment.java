@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -66,30 +65,33 @@ public class RatingFormFragment extends Fragment {
                 // Check if any of the fields (except response5) is blank
                 if (response1.isEmpty() || response2.isEmpty() || response3.isEmpty() || response4.isEmpty()) {
                     prompt1EditText.setError("Fields 1-4 cannot be empty");
-
                     return; // Exit the function since a field is blank
                 }
 
-                String concatenatedResponses =
+                String currentUsername = UserSession.getInstance().getUsername(); //get username
+
+                // Create a Rating object
+                RatingData rating = new RatingData(currentUsername,
                         "1. The workload of the class: " + response1 + "\n" +
                                 "2. The score they would like to give to this class: " + response2 + "\n" +
                                 "3. If the professor checks attendance: " + response3 + "\n" +
                                 "4. If the professor allows late homework submission: " + response4 + "\n" +
-                                "5. Other comments: " + response5;
+                                "5. Other comments: " + response5,givenClassID
+                );
 
                 if (mListener != null) {
-                    mListener.onRatingFormSubmit(concatenatedResponses);
-                    Log.println(Log.DEBUG,"ratingFormFrag", "test1.9 rated: " + response2);
-
+                    mListener.onRatingFormSubmit(rating.getRatingText());
+                    Log.println(Log.DEBUG, "ratingFormFrag", "test1.9 rated: " + response2);
                 }
 
-                Log.println(Log.DEBUG,"ratingFormFrag", "test2 rated: " + response2);
+                Log.println(Log.DEBUG, "ratingFormFrag", "test2 rated: " + response2);
 
+                DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("classes")
+                        .child(givenClassID)
+                        .child("ratings");
 
-                DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("classes").child(givenClassID).child("ratings");
-                String currentUsername = UserSession.getInstance().getUsername(); //get username
-
-                dbReference.child(currentUsername).setValue(concatenatedResponses);
+                // Set the Rating object to the database
+                dbReference.child(currentUsername).setValue(rating);
 
                 // Clear the EditText fields
                 prompt1EditText.setText("");

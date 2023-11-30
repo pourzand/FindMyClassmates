@@ -9,11 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
 
 public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder> {
 
     private List<RatingData> ratings;
+
 
     public void setRatings(List<RatingData> ratings) {
         this.ratings = ratings;
@@ -30,7 +34,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RatingData rating = ratings.get(position);
-        holder.ratingTextView.setText(rating.getRating());
+        holder.ratingTextView.setText(rating.getRatingText());
         holder.usernameTextView.setText("User: " + rating.getUsername());
         holder.upvoteCountTextView.setText(String.valueOf(rating.getUpvotes()));
         holder.downvoteCountTextView.setText(String.valueOf(rating.getDownvotes()));
@@ -82,6 +86,18 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
         // Here you'll write logic to update the rating's upvote and downvote count in the database
         // After updating in Firebase, you should refresh the specific item
         // For example: notifyItemChanged(position);
+
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("classes")
+                .child(rating.getClassName())
+                .child("ratings")
+                .child(rating.getUsername());
+
+        // Update upvotes and downvotes in the database
+        dbReference.child("upvotes").setValue(rating.getUpvotes());
+        dbReference.child("downvotes").setValue(rating.getDownvotes());
+
+        // Notify the item changed to refresh the UI
+        notifyItemChanged(position);
     }
 
     @Override

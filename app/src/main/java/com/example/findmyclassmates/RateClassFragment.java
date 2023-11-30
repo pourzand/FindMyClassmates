@@ -112,7 +112,7 @@ public class RateClassFragment extends Fragment {
                     String ratingData = ratingSnapshot.getValue(String.class);
                     Log.println(Log.DEBUG,"ratingUsername", "ratingUsername: " + ratingUsername);
 
-                    ratingsList.add(new RatingData(ratingUsername, ratingData));
+                    ratingsList.add(new RatingData(ratingUsername, ratingData,selectedClass.getClassID()));
                 }
                 ratingAdapter.setRatings(ratingsList);
             }
