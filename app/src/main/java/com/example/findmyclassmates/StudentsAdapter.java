@@ -19,25 +19,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.StudentViewHolder> {
 
     private List<String> students;
-    private String currentUserUsername;
-    private Map<String, Boolean> blockedUsers; // Map to store block status of each user
+    private String currentUserUsername; // Store the currently logged-in user's username
 
     public StudentsAdapter(List<String> students) {
         this.students = students;
-        this.currentUserUsername = UserSession.getInstance().getUsername();
-        this.blockedUsers = new HashMap<>(); // Initialize the map
-        // Initialize blockedUsers with false (not blocked) for each student
-        for (String student : students) {
-            blockedUsers.put(student, false);
-        }
+        this.currentUserUsername = UserSession.getInstance().getUsername(); //get username
     }
-
 
     @NonNull
     @Override
@@ -51,42 +42,17 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
         String studentName = students.get(position);
         holder.studentTextView.setText(studentName);
 
-        // Update the visibility and text of the block button based on the blocked status
         if (studentName.equals(currentUserUsername)) {
             holder.sendMessageButton.setVisibility(View.GONE);
-            holder.blockButton.setVisibility(View.GONE);
         } else {
             holder.sendMessageButton.setVisibility(View.VISIBLE);
-            holder.sendMessageButton.setOnClickListener(v -> composeMessage(v.getContext(), studentName));
-
-            holder.blockButton.setVisibility(View.VISIBLE);
-            if (blockedUsers.get(studentName)) {
-                holder.blockButton.setText("Unblock");
-            } else {
-                holder.blockButton.setText("Block");
-            }
-
-            holder.blockButton.setOnClickListener(v -> {
-                boolean isBlocked = !blockedUsers.get(studentName); // Toggle the block status
-                blockedUsers.put(studentName, isBlocked); // Update the map
-                notifyItemChanged(position); // Notify to update the UI
-                if (isBlocked) {
-                    blockUser(studentName, v.getContext());
-                } else {
-                    unblockUser(studentName, v.getContext());
+            holder.sendMessageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    composeMessage(v.getContext(), studentName);
                 }
             });
         }
-    }
-
-    private void blockUser(String studentName, Context context) {
-        // Implement logic to block the user
-        Toast.makeText(context, "Blocked " + studentName, Toast.LENGTH_SHORT).show();
-    }
-
-    private void unblockUser(String studentName, Context context) {
-        // Implement logic to unblock the user
-        Toast.makeText(context, "Unblocked " + studentName, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -146,16 +112,15 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
         messagesRef.child(recipient).child(currentUsername).setValue(messageText);
     }
 
+
     public static class StudentViewHolder extends RecyclerView.ViewHolder {
         public TextView studentTextView;
         public Button sendMessageButton;
-        public Button blockButton; // New block button
 
         public StudentViewHolder(View itemView) {
             super(itemView);
             studentTextView = itemView.findViewById(R.id.studentTextView);
             sendMessageButton = itemView.findViewById(R.id.sendMessageButton);
-            blockButton = itemView.findViewById(R.id.blockButton); // Initialize the block button
         }
     }
 }
