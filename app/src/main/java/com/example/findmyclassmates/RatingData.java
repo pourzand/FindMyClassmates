@@ -9,13 +9,16 @@ public class RatingData {
     private int downvotes; // New field for downvotes
     private boolean isDownvotedByCurrentUser; // New field to track if current user downvoted
 
-    public RatingData(String username, String rating, String classSelected) {
+    public RatingData(String username, String ratingText, int upvotes, int downvotes, String className) {
         this.username = username;
-        this.ratingText = rating;
-        this.className = classSelected;
-        this.upvotes = 0;
-        this.downvotes = 0;
+        this.ratingText = ratingText;
+        this.upvotes = upvotes;
+        this.downvotes = downvotes;
+        this.className = className;
+        this.isUpvotedByCurrentUser = false;
+        this.isDownvotedByCurrentUser = false;
     }
+
 
     // Add getter and setter for upvotes
     public int getUpvotes() {

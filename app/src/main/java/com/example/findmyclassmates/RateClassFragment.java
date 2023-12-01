@@ -109,10 +109,28 @@ public class RateClassFragment extends Fragment {
                 ratingsList.clear();
                 for (DataSnapshot ratingSnapshot : dataSnapshot.getChildren()) {
                     String ratingUsername = ratingSnapshot.getKey(); // Get the username
-                    String ratingData = ratingSnapshot.getValue(String.class);
-                    Log.println(Log.DEBUG,"ratingUsername", "ratingUsername: " + ratingUsername);
+                    Log.println(Log.DEBUG,"RateClassFrag","ratingUsername = " + ratingUsername );
 
-                    ratingsList.add(new RatingData(ratingUsername, ratingData,selectedClass.getClassID()));
+                    // Assuming each child of 'ratings' is a RatingData structure
+//                    DataSnapshot ratingDataSnapshot = ratingSnapshot.child("ratings").child(ratingUsername);
+                    DataSnapshot ratingDataSnapshot = ratingSnapshot;
+
+                    String ratingText = ratingDataSnapshot.child("ratingText").getValue(String.class);
+                    Log.println(Log.DEBUG,"RateClassFrag","ratingText = " + ratingText );
+
+                    Integer upvotes = ratingDataSnapshot.child("upvotes").getValue(Integer.class);
+                    Log.println(Log.DEBUG,"RateClassFrag","upvotes = " + upvotes );
+
+                    Integer downvotes = ratingDataSnapshot.child("downvotes").getValue(Integer.class);
+                    Log.println(Log.DEBUG,"RateClassFrag","downvotes = " + downvotes );
+
+
+                    // Check for null values to avoid NullPointerException
+                    upvotes = upvotes != null ? upvotes : 0;
+                    downvotes = downvotes != null ? downvotes : 0;
+
+                    RatingData ratingData = new RatingData(ratingUsername, ratingText, upvotes, downvotes, selectedClass.getClassID());
+                    ratingsList.add(ratingData);
                 }
                 ratingAdapter.setRatings(ratingsList);
             }
@@ -123,4 +141,5 @@ public class RateClassFragment extends Fragment {
             }
         });
     }
+
 }

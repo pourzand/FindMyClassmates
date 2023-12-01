@@ -5,19 +5,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.List;
 
 public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder> {
 
     private List<RatingData> ratings;
-
 
     public void setRatings(List<RatingData> ratings) {
         this.ratings = ratings;
@@ -39,54 +35,66 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
         holder.upvoteCountTextView.setText(String.valueOf(rating.getUpvotes()));
         holder.downvoteCountTextView.setText(String.valueOf(rating.getDownvotes()));
 
-        // Upvote logic
+        // Upvote and Downvote logic
         holder.upvoteIcon.setOnClickListener(v -> handleUpvote(holder, position));
-
-        // Downvote logic
         holder.downvoteIcon.setOnClickListener(v -> handleDownvote(holder, position));
     }
 
     private void handleUpvote(ViewHolder holder, int position) {
-        int currentPosition = holder.getAdapterPosition();
-        if (currentPosition != RecyclerView.NO_POSITION) {
-            RatingData currentRating = ratings.get(currentPosition);
+        RatingData currentRating = ratings.get(position);
 
-            // Toggle upvote
-            if (currentRating.isUpvotedByCurrentUser()) {
-                currentRating.setUpvotes(currentRating.getUpvotes() - 1);
-                currentRating.setUpvotedByCurrentUser(false);
-            } else {
-                currentRating.setUpvotes(currentRating.getUpvotes() + 1);
-                currentRating.setUpvotedByCurrentUser(true);
-            }
-            holder.upvoteCountTextView.setText(String.valueOf(currentRating.getUpvotes()));
-            updateRatingInDatabase(currentRating, currentPosition);
-        }
-    }
+        // If already upvoted, undo the upvote
+        if (currentRating.isUpvotedByCurrentUser()) {
+            currentRating.setUpvotes(currentRating.getUpvotes() - 1);
+            currentRating.setUpvotedByCurrentUser(false);
+        } else {
+            // If not upvoted, increase the upvote count
+            currentRating.setUpvotes(currentRating.getUpvotes() + 1);
+            currentRating.setUpvotedByCurrentUser(true);
 
-    private void handleDownvote(ViewHolder holder, int position) {
-        int currentPosition = holder.getAdapterPosition();
-        if (currentPosition != RecyclerView.NO_POSITION) {
-            RatingData currentRating = ratings.get(currentPosition);
-
-            // Toggle downvote
+            // If previously downvoted, remove the downvote
             if (currentRating.isDownvotedByCurrentUser()) {
                 currentRating.setDownvotes(currentRating.getDownvotes() - 1);
                 currentRating.setDownvotedByCurrentUser(false);
-            } else {
-                currentRating.setDownvotes(currentRating.getDownvotes() + 1);
-                currentRating.setDownvotedByCurrentUser(true);
             }
-            holder.downvoteCountTextView.setText(String.valueOf(currentRating.getDownvotes()));
-            updateRatingInDatabase(currentRating, currentPosition);
         }
+
+        // Update the UI
+        holder.upvoteCountTextView.setText(String.valueOf(currentRating.getUpvotes()));
+        holder.downvoteCountTextView.setText(String.valueOf(currentRating.getDownvotes()));
+
+        // Update the database
+        updateRatingInDatabase(currentRating, position);
+    }
+
+    private void handleDownvote(ViewHolder holder, int position) {
+        RatingData currentRating = ratings.get(position);
+
+        // If already downvoted, undo the downvote
+        if (currentRating.isDownvotedByCurrentUser()) {
+            currentRating.setDownvotes(currentRating.getDownvotes() - 1);
+            currentRating.setDownvotedByCurrentUser(false);
+        } else {
+            // If not downvoted, increase the downvote count
+            currentRating.setDownvotes(currentRating.getDownvotes() + 1);
+            currentRating.setDownvotedByCurrentUser(true);
+
+            // If previously upvoted, remove the upvote
+            if (currentRating.isUpvotedByCurrentUser()) {
+                currentRating.setUpvotes(currentRating.getUpvotes() - 1);
+                currentRating.setUpvotedByCurrentUser(false);
+            }
+        }
+
+        // Update the UI
+        holder.upvoteCountTextView.setText(String.valueOf(currentRating.getUpvotes()));
+        holder.downvoteCountTextView.setText(String.valueOf(currentRating.getDownvotes()));
+
+        // Update the database
+        updateRatingInDatabase(currentRating, position);
     }
 
     private void updateRatingInDatabase(RatingData rating, int position) {
-        // Here you'll write logic to update the rating's upvote and downvote count in the database
-        // After updating in Firebase, you should refresh the specific item
-        // For example: notifyItemChanged(position);
-
         DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference("classes")
                 .child(rating.getClassName())
                 .child("ratings")
@@ -100,18 +108,15 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
         notifyItemChanged(position);
     }
 
+
     @Override
     public int getItemCount() {
         return ratings != null ? ratings.size() : 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView ratingTextView;
-        TextView usernameTextView;
-        ImageView upvoteIcon;
-        TextView upvoteCountTextView;
-        ImageView downvoteIcon; // New ImageView for downvote
-        TextView downvoteCountTextView; // New TextView for downvote count
+        TextView ratingTextView, usernameTextView, upvoteCountTextView, downvoteCountTextView;
+        ImageView upvoteIcon, downvoteIcon;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -119,8 +124,8 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ViewHolder
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             upvoteIcon = itemView.findViewById(R.id.upvoteIcon);
             upvoteCountTextView = itemView.findViewById(R.id.upvoteCountTextView);
-            downvoteIcon = itemView.findViewById(R.id.downvoteIcon); // Initialize the downvote ImageView
-            downvoteCountTextView = itemView.findViewById(R.id.downvoteCountTextView); // Initialize the downvote count TextView
+            downvoteIcon = itemView.findViewById(R.id.downvoteIcon);
+            downvoteCountTextView = itemView.findViewById(R.id.downvoteCountTextView);
         }
     }
 }
